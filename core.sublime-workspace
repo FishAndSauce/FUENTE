@@ -1,0 +1,986 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"kml",
+				"kml_path"
+			],
+			[
+				"PO",
+				"POWER_C"
+			],
+			[
+				"geo",
+				"geometry"
+			],
+			[
+				"polygo",
+				"polygon_list"
+			],
+			[
+				"geojson_ou",
+				"geojson_output_dict"
+			],
+			[
+				"geojson",
+				"geojson_geometry_dict"
+			],
+			[
+				"geojson_",
+				"geojson_properties_dict"
+			],
+			[
+				"ge",
+				"geojson_output_list"
+			],
+			[
+				"coor",
+				"coord_list"
+			],
+			[
+				"border_fields",
+				"border_fields_dict"
+			],
+			[
+				"bo",
+				"border_fields"
+			],
+			[
+				"bor",
+				"borders_shapefile"
+			],
+			[
+				"sha",
+				"shapefile_name"
+			],
+			[
+				"my",
+				"my_event"
+			],
+			[
+				"index",
+				"index_day"
+			],
+			[
+				"z",
+				"z_plot"
+			],
+			[
+				"y",
+				"hours_in_year"
+			],
+			[
+				"inde",
+				"index_day"
+			],
+			[
+				"index_",
+				"index_day"
+			],
+			[
+				"hour",
+				"hours_in_year"
+			],
+			[
+				"valu",
+				"value_considered_as_binary"
+			],
+			[
+				"val",
+				"value_considered"
+			],
+			[
+				"va",
+				"value_considered_as_binary"
+			],
+			[
+				"value",
+				"value_considered"
+			],
+			[
+				"file",
+				"file_path"
+			],
+			[
+				"filep",
+				"filepath_year"
+			],
+			[
+				"filepa",
+				"filepath_prefix"
+			],
+			[
+				"filepath_",
+				"filepath_year"
+			],
+			[
+				"filepath",
+				"filepath_year"
+			],
+			[
+				"in",
+				"input_file_list"
+			],
+			[
+				"filen",
+				"filenames_in_folder_list"
+			],
+			[
+				"should",
+				"should_have_file_list"
+			],
+			[
+				"shou",
+				"should_have_file_list"
+			],
+			[
+				"table",
+				"table_str"
+			],
+			[
+				"da",
+				"dates_in_folder"
+			],
+			[
+				"this",
+				"this_value"
+			],
+			[
+				"pr",
+				"prettified"
+			],
+			[
+				"tim",
+				"time_range"
+			],
+			[
+				"sub",
+				"sub_or_line_voltage"
+			],
+			[
+				"output_",
+				"output_file_path"
+			],
+			[
+				"ou",
+				"output_filename"
+			],
+			[
+				"test",
+				"test_url"
+			],
+			[
+				"ur",
+				"url_variable_3"
+			],
+			[
+				"out",
+				"output_filename"
+			],
+			[
+				"end_d",
+				"end_day"
+			],
+			[
+				"url",
+				"url_variable_1"
+			],
+			[
+				"url_va",
+				"url_variable_2"
+			],
+			[
+				"txt",
+				"txt_filename_list"
+			],
+			[
+				"mo",
+				"month_list"
+			],
+			[
+				"data",
+				"data_list"
+			],
+			[
+				"ta",
+				"table_body"
+			],
+			[
+				"rea",
+				"real_index"
+			],
+			[
+				"for",
+				"forecast_items"
+			],
+			[
+				"ass",
+				"asset_type"
+			],
+			[
+				"nu",
+				"numbers_list"
+			],
+			[
+				"n",
+				"numbers_as_string_list"
+			],
+			[
+				"rg",
+				"rgb_val"
+			],
+			[
+				"colo",
+				"colour_range"
+			],
+			[
+				"coul",
+				"colour_scale_list"
+			],
+			[
+				"demand",
+				"demand_data_frame"
+			],
+			[
+				"demand_input_",
+				"demand_input_path"
+			],
+			[
+				"bin",
+				"percent_bins"
+			],
+			[
+				"max",
+				"max_demand_mw"
+			],
+			[
+				"dema",
+				"demand_mw_np"
+			],
+			[
+				"demadn",
+				"demand_data_frame"
+			],
+			[
+				"asset_ty",
+				"asset_type_list"
+			],
+			[
+				"ext_ca",
+				"ext_cap_at_acc_percent_list"
+			],
+			[
+				"ext",
+				"ext_cap_at_acc_percent_list"
+			],
+			[
+				"ext_acc",
+				"ext_access_percent_list"
+			],
+			[
+				"zip",
+				"zip_two"
+			],
+			[
+				"zip_",
+				"zip_one"
+			],
+			[
+				"list",
+				"list_even"
+			],
+			[
+				"csv_",
+				"csv_codec"
+			],
+			[
+				"ex",
+				"ext_access_and_acc"
+			],
+			[
+				"row",
+				"csv_row"
+			],
+			[
+				"my_",
+				"my_other_list"
+			],
+			[
+				"per",
+				"percent_float"
+			],
+			[
+				"str",
+				"stroke_width_dict"
+			],
+			[
+				"Mul",
+				"MultiPoint"
+			],
+			[
+				"line_",
+				"line_voltage_level"
+			],
+			[
+				"Vali",
+				"ValidationError"
+			],
+			[
+				"Thi",
+				"this_value"
+			],
+			[
+				"Val",
+				"ValidationError"
+			],
+			[
+				"geojso",
+				"geojson_input"
+			],
+			[
+				"asset",
+				"asset_name"
+			],
+			[
+				"B",
+				"BooleanField"
+			],
+			[
+				"string",
+				"StringField"
+			],
+			[
+				"from",
+				"from_field"
+			],
+			[
+				"bool",
+				"bool_value"
+			],
+			[
+				"wa",
+				"warnings_dict"
+			],
+			[
+				"warning",
+				"warning_message"
+			],
+			[
+				"warn",
+				"warning_message"
+			],
+			[
+				"csv",
+				"csv_row"
+			],
+			[
+				"cs",
+				"csv_data_frame"
+			],
+			[
+				"re",
+				"Resource"
+			],
+			[
+				"to",
+				"to_dict"
+			],
+			[
+				"To",
+				"to_dict"
+			],
+			[
+				"li",
+				"line_voltage_level"
+			],
+			[
+				"Third",
+				"Third_Char"
+			],
+			[
+				"M",
+				"my_dicts"
+			],
+			[
+				"First",
+				"First_colour"
+			],
+			[
+				"strin",
+				"StringField"
+			],
+			[
+				"My",
+				"MyOutputs"
+			],
+			[
+				"th",
+				"Third_Char"
+			],
+			[
+				"sec",
+				"Second_Char"
+			],
+			[
+				"Asset",
+				"Asset_Name"
+			],
+			[
+				"First_c",
+				"First_colour"
+			],
+			[
+				"asse",
+				"asset_list"
+			],
+			[
+				"Ass",
+				"Asset_name"
+			],
+			[
+				"f",
+				"First_Column"
+			],
+			[
+				"t",
+				"Test_Variable"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 35.0,
+		"last_filter": "Package Control: install",
+		"selected_items":
+		[
+			[
+				"Package Control: install",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ins",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: in",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: inst",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: i",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"pyth",
+				"Set Syntax: Python"
+			],
+			[
+				"set syntax",
+				"Set Syntax: Python"
+			],
+			[
+				"prett",
+				"Pretty JSON: Validate"
+			],
+			[
+				"pre",
+				"Pretty JSON: Validate"
+			],
+			[
+				"pret",
+				"Pretty JSON: Validate"
+			],
+			[
+				"packa",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 143.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '2915d1851351e5ee549c20394736b442' + '8bc59f460fa1548d1514676163dafc88'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/114261/Dropbox (Personal)/Business Development/Latin America/Modelling/Modelling Code/Optimisation Model/engine/core.py",
+		"/C/Users/114261/Dropbox (Personal)/Business Development/Latin America/Modelling/Modelling Code/Optimisation Model/engine/core",
+		"/C/Users/114261/Dropbox (Personal)/Temporary/SubTrans.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Temporary/SubTrans2.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Temporary/NOM DG Layer/nom/dg_core.py",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/indented_files/indented_",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/Indent_json_Ausnet.py",
+		"/C/Users/114261/Dropbox (Personal)/Temporary/NOM dg Local/nom-Joe-s_branch/nom/core.py",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/files_to_indent/SubTrans.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/files_to_indent/SubTrans2.geojson",
+		"/C/Users/114261/Dropbox (UTS ISF)/15056_ARENA_Networks Renewed/Deliverables in Progress/Modelling/Data Filtering/filter_code_low.py",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json_special/indented_files/indented_oldPowercor.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/Indent_json_Tas_append.py",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json_special/indented_files/indented_TasNetworks_availcap.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Temporary/TasNetworks.geojson",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2012/12199_DANCE extension/3. NOM Model & Data (shared)/Data Received (master)/TasNetworks/2016 Files/TasNetworks_availcap.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json_special/Indent_json_Tas.py",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/indented_files/TasNetworks",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json_special/Indent_json_SAPN.py",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/files_to_indent/indented_TasNetworks_availcap.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/indented_files/indented_TasNetworks.geojson",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2012/12199_DANCE extension/3. NOM Model & Data (shared)/Data Received (master)/SA_Power_Network/2016 Files/SAPN_availcap.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json_special/indented_files/indented_SAPN_availcap.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json_special/Indent_json_oldPowercor.py",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/kml_to_geojson/kml_to_geojson.py",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2012/12199_DANCE extension/3. NOM Model & Data (shared)/Data Received (master)/CitiPower/2016 Files/ALL_availcap.geojson",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2012/12199_DANCE extension/3. NOM Model & Data (shared)/Data Received (master)/TasNetworks/2016 Files/SubStation_Areas.kml",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2012/12199_DANCE extension/3. NOM Model & Data (shared)/Data Received (master)/SA_Power_Network/2016 Files/SubstationSupplyAreas.kml",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Shapefile_to_geojson/Shapefile_to_geojson_TasNetworksO_only.py",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2016/16137_ARENA_DG Connection Layer/4. Work in Progress/5. Data/working data/Transgrid/geography.GeoJSON",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json_special/files_to_indent/SAPN.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/Indent_json.py",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/indented_files/indented_oldPowercor.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/Indent_json_oldPowercor.py",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/kml_to_geojson/kml_file/oldPowercor.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/kml_to_geojson/kml_file/oldPowercor.kml",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2016/16137_ARENA_DG Connection Layer/4. Work in Progress/5. Data/data received/Electranet/Current_Substations_20170616.geojson",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2016/16137_ARENA_DG Connection Layer/4. Work in Progress/5. Data/data received/ActewAGL/actewagl_sub_trans_lines/actewagl_sub_trans_lines_input.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Shapefile_to_geojson/geojson_outputs/output.geojson",
+		"/C/Users/114261/Dropbox (UTS ISF)/15056_ARENA_Networks Renewed/Deliverables in Progress/Modelling/Data Filtering/filter_code.py",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2016/16137_ARENA_DG Connection Layer/4. Work in Progress/5. Data/data received/Energex/Zone_Sub_Points_Revised_2017_2.json",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2016/16137_ARENA_DG Connection Layer/4. Work in Progress/5. Data/data received/Transgrid/Original Files/Archived/NOM2017_New_Gen_Data_Final_V2_TransGrid.geojson",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2016/16137_ARENA_DG Connection Layer/4. Work in Progress/5. Data/data received/Transgrid/Original Files/Archived/NOM2017_New_Gen_Data_Final_V3_TransGrid.geojson",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2016/16137_ARENA_DG Connection Layer/4. Work in Progress/5. Data/data received/Ausnet/Originals/SubTransmission.json",
+		"/C/Users/114261/Dropbox (Personal)/Business Development/Latin America/Modelling/Datos/tests/Pandas Dataframes4.py",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Shapefile_to_geojson/Shapefile_to_geojson.py",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2012/12199_DANCE extension/3. NOM Model & Data (shared)/Data Received (master)/Ausnet/ZONESUB.JSON",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Shapefile_to_geojson/Shapefile_to_geojson energex only.py",
+		"/C/Users/114261/Dropbox (Personal)/Business Development/Latin America/Modelling/Datos/tests/Pandas Dataframes3.py",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/indented_files/indented_Zone_Sub_Points_Revised_2017_2.json",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Shapefile_to_geojson/Shapefile_to_geojson_reverse Plygon.py",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/files_to_indent/Zone_Sub_Polygons_Revised_2017_2.json",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Check Polygon/flip _polygon.py",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2012/12199_DANCE extension/3. NOM Model & Data (shared)/Data Received (master)/Energex/Zone_Sub_Polygons_Revised_2017_2.geojson.json",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2016/16137_ARENA_DG Connection Layer/4. Work in Progress/5. Data/working data/ActewAGL/geography.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Shapefile_to_geojson/geojson_outputs/output_test.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Check Polygon/indented_Zone_Sub_Polygons_Revised_2017_2.json",
+		"/C/Users/114261/Dropbox (Personal)/Internationalisation Mapping/Borders/borders_geojson.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Shapefile_to_geojson/geojson_outputs/output_test2.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Check Polygon/reversed_Zone_Sub_Polygons_Revised_2017_2.json",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/indented_files/indented_Zone_Sub_Polygons_Revised_2017_2.json",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Check Polygon/check _polygon.py",
+		"/C/Users/114261/Dropbox (Personal)/Business Development/Latin America/Modelling/Datos/tests/Pandas Dataframes2.py",
+		"/C/Users/114261/Dropbox (Personal)/Business Development/Latin America/Modelling/Modelling Code/core.py",
+		"/C/Users/114261/Dropbox (UTS ISF)/15056_ARENA_Networks Renewed/Deliverables in Progress/Modelling/Data Filtering/filter_code",
+		"/C/Users/114261/Dropbox (Personal)/Temporary/NOM dg Local/nom-Joe-s_branch/nom/paths.py",
+		"/C/Users/114261/NOM/manage.py",
+		"/C/Users/114261/NOM/capacity/engine/core.py",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2016/16137_ARENA_DG Connection Layer/4. Work in Progress/5. Data/Ausnet/Ausnet_indented.geojson",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2016/16137_ARENA_DG Connection Layer/4. Work in Progress/5. Data/Ausnet/Ausnet_input.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Shapefile_to_geojson/shapefile/SubTransmission.shp",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2016/16137_ARENA_DG Connection Layer/4. Work in Progress/5. Data/Ausnet/Originals/SubTransmission.json",
+		"/C/Users/114261/Dropbox (Personal)/Temporary/Zone_Sub_Polygons_Revised_2017_2.json",
+		"/C/Users/114261/Dropbox (Personal)/Temporary/Zone_Sub_Points_Revised_2017_2.json",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/indented_files/indented_NOM_Ergon_Polygon.json",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2012/12199_DANCE extension/3. NOM Model & Data (shared)/Data Received (master)/Ergon/NOM_Ergon_Polygon.json",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2016/16137_ARENA_DG Connection Layer/4. Work in Progress/5. Data/ActewAGL/actewagl_input.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/indented_files/indented_NOM_Ergon.json",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2012/12199_DANCE extension/3. NOM Model & Data (shared)/Data Received (master)/Ergon/NOM_Ergon.json",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2016/16137_ARENA_DG Connection Layer/4. Work in Progress/5. Data/ActewAGL/actewagl_output  s170523 c170523.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/files_to_indent/indented_Ergon.json",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/indented_files/indented_Ergon.json",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/files_to_indent/Ergon.json",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/indented_files/indented_indented_Ergon.json",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/indented_files/indented_NOM_LinesAndPoints_JSON.json",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/indented_files/indented_Zone_Sub_Polygons_Revised_2017.json",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2016/16137_ARENA_DG Connection Layer/4. Work in Progress/5. Data/geojson_template.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Temporary/NOM DG Layer/Data/Example.json",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/indented_files/indented_Energex_Zone_Substations_2017_Points.shp.json",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/temp/Zone_Sub_Polygons_Revised_2017.json",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/temp/Energex_Zone_Substations_2017_Points.shp.json",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/indented_files/indented_NOM_LinesAndPoints_JSON.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/files_to_indent/NOM_LinesAndPoints_JSON.json",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/indented_files/Zone_Sub_Polygons_Revised_2017.json_indented.json",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/indented_files/Energex_Zone_Substations_2017_Points.shp.json_indented.json",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/Indent json/indented_files/NOM_LinesAndPoints_JSON.json_indented.json",
+		"/C/Users/114261/Dropbox (Personal)/Business Development/Latin America/Modelling/Datos/Web Scraper Code/Tests/Rename_files_in_folderpy.py",
+		"/C/Users/114261/Dropbox (Personal)/Business Development/Latin America/Modelling/Datos/Web Scraper Code/Change_filename.py",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2012/12199_DANCE extension/3. NOM Model & Data (shared)/Data Received (master)/Energex/Zone_Sub_Polygons_Revised_2017.json",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2012/12199_DANCE extension/3. NOM Model & Data (shared)/Data Received (master)/Energex/Energex_Zone_Substations_2017_Points.shp.json",
+		"/C/Users/114261/Dropbox (Personal)/Temporary/NOM/actewagl_belconnen_zone_sub.geojson",
+		"/C/Users/114261/Dropbox (Personal)/NOM Temp/my_core.py",
+		"/C/Users/114261/Dropbox (Personal)/Coding/Tools/write New Geojson.py",
+		"/C/Users/114261/Dropbox (Personal)/Temporary/NOM/Actewagl_pretty.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Temporary/NOM/Actewagl.geojson",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2012/12199_DANCE extension/3. Model & Data (ISF)/Model_Outputs_2016/ActewAGL/ADV_det.geojson",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2012/12199_DANCE extension/3. Model & Data (ISF)/Model_Outputs_2016/ActewAGL/PropInv.geojson",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2012/12199_DANCE extension/3. NOM Model & Data (shared)/Model_Inputs_2017/Ergon/NOM_LinesAndPoints_JSON.json",
+		"/C/Users/114261/Dropbox (UTS ISF)/1. Projects/2016/16137_ARENA_DG Connection Layer/4. Work in Progress/5. Data/Transgrid/transgrid_input.GeoJSON",
+		"/C/Users/114261/NOM/capacity/engine/transformations.py",
+		"/C/Users/114261/NOM/capacity/engine/resources.py",
+		"/C/Users/114261/NOM/capacity/engine/validators.py",
+		"/C/Users/114261/NOM DG Layer/.gitignore",
+		"/C/Users/114261/Dropbox (Personal)/NOM Temp/my_core",
+		"/C/Users/114261/NOM DG Layer/Tests/IndentGeojson.py",
+		"/C/Users/114261/Dropbox (Personal)/Internationalisation Mapping/Borders/EE_by_ZoneSub_pretty.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Temporary/EE_by_ZoneSub.json",
+		"/C/Users/114261/NOM DG Layer/capacity/engine/core.py",
+		"/C/Users/114261/NOM DG Layer/nom/utils.py",
+		"/C/Users/114261/NOM DG Layer/manage.py",
+		"/C/Users/114261/NOM DG Layer/nom/dg_core.py",
+		"/C/Users/114261/NOM DG Layer/nom/views.py",
+		"/C/Users/114261/NOM DG Layer/nom/__pycache__/views.cpython-36.pyc",
+		"/C/Users/114261/Dropbox (Personal)/Internationalisation Mapping/filesnames_in_folder.py",
+		"/C/Users/114261/NOM DG Layer/nom old/dg_core.py",
+		"/C/Users/114261/Dropbox (Personal)/Internationalisation Mapping/Borders/output.geojson",
+		"/C/Users/114261/Dropbox (Personal)/Internationalisation Mapping/Shapefile_to_geojson_countries.py",
+		"/C/Users/114261/Dropbox (Personal)/Business Development/Latin America/Modelling/Datos/Web Scraper Code/Tests/check_files_are_in_folder.py"
+	],
+	"find":
+	{
+		"height": 21.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"featurecollec",
+			"FeatureCollection",
+			"featurc",
+			"features",
+			"FeatureCollection",
+			"kml",
+			"avoca",
+			"name",
+			"kml_75",
+			"kml_76",
+			"tas",
+			"\"name\"",
+			"\\",
+			"wed",
+			"polygon",
+			"\\",
+			"NLA-CNR",
+			"name",
+			"82914497",
+			"503753662109",
+			"40017983",
+			"crs",
+			"rings",
+			"load",
+			"avail",
+			"load",
+			"\"load\"",
+			"\"load:",
+			"load",
+			"asset_code",
+			"csv_row",
+			"coord",
+			"coords",
+			"asset_coords_dict",
+			"ExtAccessAndAcc",
+			"unfla",
+			"may",
+			"austra",
+			"            2.96361, \n            36.802216",
+			"\\",
+			"blue",
+			"\\",
+			"oskill",
+			"substa",
+			"synth",
+			"credenti",
+			" = odin.BooleanFieldCSV(Null=True)",
+			": 500",
+			"500",
+			"fysh",
+			"sub",
+			"trans",
+			"BooleanField(",
+			"BooleanFieldCSV",
+			"conside",
+			"fysh",
+			"stroke",
+			"\"Name\"",
+			"\\",
+			"Name\"",
+			"asset_c",
+			"pol",
+			"rele",
+			"alan",
+			"t150",
+			"Alan Sherriff",
+			"both",
+			"#",
+			"{ \"Name",
+			"97H",
+			"97H/4",
+			"chart",
+			"\"true\"",
+			"                \"chart_true_false\": \"true\"\n                \"chart\": [",
+			"                \"chart_true_false\": \"true\"\n",
+			"                \"chart\": [",
+			"LSSS-WGI",
+			"Linestring",
+			"linestr",
+			"CIRCUIT_NA",
+			"asset_code",
+			"sdme",
+			"asset_code",
+			"asset_id",
+			"bdl-nla",
+			"bdl",
+			"level",
+			"high ",
+			"therm",
+			"id",
+			"code",
+			"asset_id",
+			"\\",
+			"]",
+			"id",
+			"table",
+			"class",
+			" ",
+			"stream",
+			"source",
+			"06",
+			"2017",
+			"200",
+			"input",
+			"06",
+			"200",
+			"chart",
+			"output",
+			"get",
+			"transg",
+			"#",
+			"relev",
+			"voltage",
+			"97H",
+			"97H/4",
+			"A-21",
+			"underli",
+			"\\",
+			"SDME_ID",
+			"attributes",
+			"\"paths\"",
+			"polyline",
+			"0",
+			"\\",
+			"properties",
+			"name",
+			"show",
+			"#"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"\"asset_name\"",
+			"/",
+			"coordinates",
+			"asset",
+			"/",
+			"wind",
+			"= boolean_to_binary(value_considered=)",
+			"BooleanFieldCSV(",
+			"BooleanFieldCSV",
+			"BooleanField",
+			"\"asset_code\"",
+			"/",
+			"asset_code\"",
+			"{ \"asset_code",
+			"true",
+			"                \"chart_true_false\": \"true\",\n                \"chart\": [",
+			"                \"chart_true_false\": \"true\",",
+			"                \"chart_true_false\": \"true\"\n                \"chart\": [",
+			"LineString",
+			"asset_code",
+			"SDME_ID",
+			"asset_code",
+			"/",
+			"",
+			"^",
+			"/",
+			"asset_code",
+			"properties",
+			"\"type\": \"Linestring\", \"coordinates\"",
+			"/",
+			"^",
+			"</li> {{/",
+			"li",
+			"not_considered",
+			"BooleanFieldCSV",
+			"}}",
+			"{{",
+			"/",
+			"assets_in_csv_list",
+			"csv_assets_in_geojson_list",
+			"String",
+			"stroke_width",
+			"NetworkInputData",
+			"Integer",
+			",",
+			"voltage_message_end",
+			"    ",
+			": 'null'",
+			"BooleanField",
+			"StringField",
+			"",
+			"warning_message",
+			"asset_voltages_ok",
+			"(null = True)",
+			"False",
+			"True",
+			" = csv_row.",
+			"compare_fields_dict",
+			": False,",
+			"",
+			"colour"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": false
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 21.0
+	},
+	"input":
+	{
+		"height": 29.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/Python/Python.sublime-build",
+	"project": "core.sublime-project",
+	"replace":
+	{
+		"height": 38.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"htm",
+				"C:\\Users\\114261\\AppData\\Roaming\\Sublime Text 3\\Packages\\User\\HTMLBeautify.sublime-settings"
+			],
+			[
+				"html",
+				"C:\\Users\\114261\\AppData\\Roaming\\Sublime Text 3\\Packages\\User\\HTMLBeautify.sublime-settings"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 124.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

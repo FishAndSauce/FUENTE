@@ -20,3 +20,13 @@ def generate_load_duration_curve(hourly_demand_mw_list):
         count_values_above_bin_edge = sum(hourly_demand_as_percent_of_peak >= bin_edge)
         load_duration_curve_data_list.append(count_values_above_bin_edge)
     return load_duration_curve_data_list
+
+
+# def find_lowest_cost_envelope(generator_cost_curve_dict):
+
+#     # find lowest y at x = 1 and lowest y at x = 0 (not negative y)
+#     # starting at line with lowest x = 1
+#     # calculate all intersects
+#     # find highest intersect, in terms of x, that is lower than starting point
+#     # change to that line and repeat
+#     # repeat until intersect = intersect with lowest x = 0

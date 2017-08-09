@@ -1,0 +1,4 @@
+pandas
+os
+numpy
+matplotlib.pyplot

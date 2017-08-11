@@ -1,120 +1,84 @@
-class Line():
-    def __init__(Self, gradient, y_intercept):
+import numpy as np
+import formencode
+from formencode import validators
+
+
+class StraightLine():
+    """ A line in the form y = mx + b:
+
+    Attributes:
+        name: name of line
+        gradient: slope of line (m)
+        y_intercept: value of y at x=o (b)
+    """
+
+    def __init__(self, gradient, y_intercept):
         self.gradient = gradient
         self.y_intercept = y_intercept
 
-    def generate_load_duration_curve(hourly_demand_mw_list):
-        # takes hourly demand data for a period
-        # returns a list with demand data transformed
-        # list is in form of a load duration curve (LDC)
+        # validators.Empty.to_python(gradient)
+        # validators.Number.to_python(gradient)
 
-        # get peak demand value
-        # transform hourly demand data into percentage of peak demand
-        peak_demand_mw = hourly_demand_mw_list.max()
-        hourly_demand_as_percent_of_peak = 100 * hourly_demand_mw_list / peak_demand_mw
+    def find_y_at_x(self, x_value):
+        """ return the value of y at a given value of x
 
-        # create bins to sort data points
-        percent_bins_list = range(0, 100)
+        """
+        y_value = x_value * self.gradient + self.y_intercept
+        return y_value
 
-        # count data points above each bin and create list noting that count
-        # list is the LDC
-        load_duration_curve_data_list = list()
-        for bin_edge in percent_bins_list:
-            count_values_above_bin_edge = sum(hourly_demand_as_percent_of_peak >= bin_edge)
-            load_duration_curve_data_list.append(count_values_above_bin_edge)
-        return load_duration_curve_data_list
+    def find_intercepts_on_line(self, other_lines):
+        """returns a dict of the coordinates of the intersection of this line with 
+        other lines in the form {"other_line_name1": x1, "other_line_name2": x2 ...etc }
 
-
-def find_lowest_cost_envelope(generator_cost_curve_dict):
-    # find lowest y at x = 1 and lowest y at x = 0
-    mins_at_extents_dict = find_mins_at_extents(generator_cost_curve_dict=generator_cost_curve_dict)
-
-    # starting at line with lowest x = 1
-    # calculate all intersects on line under examination and determine next line in envelope
-    current_line = mins_at_extents_dict['one']
-    current_position = 1
-    
-    # instigate generator rank and position lists at x = 1
-    generator_rank_list = list()
-    x_positions_list = list()
-    generator_rank_list.append(current_line)
-    x_positions_list.append(1)
-
-    remaining_generator_cost_curve_dict = generator_cost_curve_dict
-    while True:
-        
-        current_line_equation = generator_cost_curve_dict[current_line]
-        del remaining_generator_cost_curve_dict[current_line]
-
-        intercepts_on_line_dict = find_intercepts_on_line(
-            current_line_equation=current_line_equation,
-            other_lines=remaining_generator_cost_curve_dict
-            )
-        
-        for intersept in intercepts_on_line_dict:
-            if intercepts_on_line_dict[intersept] > current_position:
-                intercepts_on_line_dict[intersept] = None
-
-        current_line = max(
-            intercepts_on_line_dict,
-            key=intercepts_on_line_dict.get
-            )
-        current_position = intercepts_on_line_dict[current_line]
-
-        generator_rank_list.append(current_line)
-        x_positions_list.append(intercepts_on_line_dict[current_line])
-
-        if current_line == mins_at_extents_dict['zero']:
-            break
-
-    lowest_cost_envelope_dict = {'generator_rank_list': generator_rank_list, 'x_positions_list': x_positions_list}
-    # retur dict with rank list and corresponding x_positions list
-    # where index indicates rank 
-    # {'generator_rank_list': ['bio','OCGT',etc], 
-    #   'x_positions_list': [1, 0.8, 0.5, 0.3]}
-    return lowest_cost_envelope_dict # dict with rank list and corresponding value list{'rank_list': ['bio']}
+        """
+        intercepts_on_line_dict = dict()
+        for other_line in other_lines:
+            m1 = self.gradient
+            m2 = other_lines[other_line].gradient
+            b1 = self.y_intercept
+            b2 = other_lines[other_line].y_intercept
+            x = (b1 - b2) / (m2 - m1)
+            intercepts_on_line_dict[other_line] = x
+        return intercepts_on_line_dict
 
 
-def find_mins_at_extents(generator_cost_curve_dict):
-    cost_at_1_dict = dict()
-    cost_at_0_dict = dict()
-    mins_at_extents_dict = dict()
+class PowerDemandTimeSeries():
+    """ An uninterrupted time series of power demand
 
-    for generator in generator_cost_curve_dict:
-        y_at_x_equals_1 = find_y_at_x(
-            gradient=generator_cost_curve_dict[generator]['gradient'],
-            y_intercept=generator_cost_curve_dict[generator]['y_intercept'],
-            x_value=1
-            )
-        cost_at_1_dict[generator] = y_at_x_equals_1
-        y_at_x_equals_0 = find_y_at_x(
-            gradient=generator_cost_curve_dict[generator]['gradient'],
-            y_intercept=generator_cost_curve_dict[generator]['y_intercept'],
-            x_value=0
-            )
-        cost_at_0_dict[generator] = y_at_x_equals_0
-    
-    mins_at_extents_dict['zero'] = min(
-        cost_at_0_dict,
-        key=cost_at_0_dict.get)
-    mins_at_extents_dict['one'] = min(
-        cost_at_1_dict,
-        key=cost_at_1_dict.get)
-    return mins_at_extents_dict
+        Attributes:
+        power_unit: units of power (options: W, MW, GW, TW)
+        time_unit: time interval units (options: s, m, h, d)
+        time_interval: number of time_units per time interval (float)
+        demand_array: numpy array of demand values where index represents time interval
+    """
 
-def find_y_at_x(gradient, y_intercept, x_value):
-    y_value = x_value*gradient + y_intercept
-    return y_value
+    def __init__(self, demand_array, power_unit, time_unit, time_interval):
+        self.demand_array = np.array(demand_array)
+        self.power_unit = power_unit
+        self.time_unit = time_unit
+        self.time_interval = time_interval
 
-def find_intercepts_on_line(current_line_equation, other_lines):
-    intercepts_on_line_dict = dict()
-    for line in other_lines:
-        m1 = current_line_equation['gradient']
-        m2 = other_lines[line]['gradient']
-        b1 = current_line_equation['y_intercept']
-        b2 = other_lines[line]['y_intercept']
-        x = (b1-b2)/(m2-m1)
-        intercepts_on_line_dict[line] = x
-    return intercepts_on_line_dict
+    def change_power_unit(self, new_power_unit):
+        """ returns a new PowerDemandTimeSeries with power in newly specified units
 
+        'W' = watts
+        'MW' = megawatts
+        'GW' = gigawatts
+        'TW' = terawatts
 
+        """
+        power_unit_options_dict = {'W': 1, 'MW': 1000, 'GW': 1000000, 'TW': 1000000000}
+        demand_in_old_units = self.demand_array
+        demand_in_new_units = (demand_in_old_units * power_unit_options_dict[self.power_unit]) / power_unit_options_dict[new_power_unit]
+        return demand_in_new_units
+
+    # def change_time_unit(self, new_time_unit):
+    #     """ returns a new PowerDemandTimeSeries with time in newly specified units
+
+    #     's' = seconds
+    #     'm' = minutes
+    #     'h' = hours
+    #     'd' = days
+    #     """
+
+    # def change_time_interval():

@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import numpy as np
 
-
+# create preproced data storage  
 working_data_store = pd.HDFStore('working_data_store.h5')
 
 # set filepath chunks

@@ -1,7 +1,6 @@
-from transformations import generate_load_duration_curve, find_lowest_cost_envelope
-from classes import StraightLine, PowerDemandTimeSeries
+from transformations import find_lowest_cost_envelope, plot_cost_curves
+from classes import StraightLine, PowerDemandTimeSeries, LoadDurationCurve
 import pandas as pd
-
 
 # link to preprepared data
 working_data_store = pd.HDFStore('working_data_store.h5')
@@ -10,9 +9,21 @@ working_data_store = pd.HDFStore('working_data_store.h5')
 hourly_demand_dataframe = working_data_store['hourly_demand_dataframe']
 
 # create LDC
-hourly_demand_mw_list = hourly_demand_dataframe['hourly_demand']
-load_duration_curve_list = generate_load_duration_curve(
-    hourly_demand_mw_list=hourly_demand_mw_list)
+demand_profile = PowerDemandTimeSeries(
+    hourly_demand_dataframe['hourly_demand'],
+    power_unit="MW",
+    time_unit="h",
+    time_interval=1
+)
+
+load_duration_curve = demand_profile.create_load_duration_curve(as_percent=False, as_proportion=True, granularity=1000)
+print load_duration_curve
+plt.plot(load_duration_curve[0], load_duration_curve[1])
+axis_lims = [0, load_duration_curve[0].max(), 0, (1.01 * load_duration_curve[1].max())]
+
+plt.axis(axis_lims)
+plt.show()
+
 
 # get user inputs and generator characteristics
 generators_included_characteristics_dataframe = working_data_store['generators_included_characteristics_dataframe']
@@ -31,12 +42,9 @@ for generator in generators_included_list:
 generator_rank_list= find_lowest_cost_envelope(generator_cost_curve_dict)
 print generator_rank_list
 
+load_duration_curve.calculate_ldc_areas(generator_rank_list)
 
-# LDC and capacity
-# intersection of CF and LDC
-# calculation of areas under LDC
-# calculation of tot cost and emissions
+# plot_cost_curves(generator_rank_list, generator_cost_curve_dict)
 
-###
-# dump outputs
-# pretty graphs of outputs
+
+

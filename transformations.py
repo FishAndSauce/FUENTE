@@ -1,29 +1,8 @@
 import numpy as np
-from classes import StraightLine
+from classes import StraightLine, PowerDemandTimeSeries
 from operator import attrgetter
 import copy
-
-
-def generate_load_duration_curve(hourly_demand_mw_list):
-    # takes hourly demand data for a period
-    # returns a list with demand data transformed
-    # list is in form of a load duration curve (LDC)
-
-    # get peak demand value
-    # transform hourly demand data into percentage of peak demand
-    peak_demand_mw = hourly_demand_mw_list.max()
-    hourly_demand_as_percent_of_peak = 100 * hourly_demand_mw_list / peak_demand_mw
-
-    # create bins to sort data points
-    percent_bins_list = range(0, 100)
-
-    # count data points above each bin and create list noting that count
-    # list is the LDC
-    load_duration_curve_data_list = list()
-    for bin_edge in percent_bins_list:
-        count_values_above_bin_edge = sum(hourly_demand_as_percent_of_peak >= bin_edge)
-        load_duration_curve_data_list.append(count_values_above_bin_edge)
-    return load_duration_curve_data_list
+import matplotlib.pyplot as plt
 
 
 def find_mins_at_extents(generator_cost_curve_dict):
@@ -39,7 +18,6 @@ def find_mins_at_extents(generator_cost_curve_dict):
 
     mins_at_extents_dict['zero'] = min(cost_at_0_dict, key=cost_at_0_dict.get)
     mins_at_extents_dict['one'] = min(cost_at_1_dict, key=cost_at_1_dict.get)
-    print mins_at_extents_dict['zero']
 
     return mins_at_extents_dict
 
@@ -84,3 +62,21 @@ def find_lowest_cost_envelope(generator_cost_curve_dict):
             break
 
     return generator_rank_list
+
+
+def plot_cost_curves(generator_rank_list, generator_cost_curve_dict):
+
+    line_plot = [name[0] for name in generator_rank_list]
+    label_here = list()
+
+    for line in line_plot:
+        plot_this = [generator_cost_curve_dict[line].find_y_at_x(0), generator_cost_curve_dict[line].find_y_at_x(1)]
+        label_here.append((1, plot_this[1]))
+        plt.plot(plot_this, '-r')
+
+    for label, xy in zip(line_plot, label_here):
+        plt.annotate(
+            label,
+            xy=xy
+        )
+    plt.show()

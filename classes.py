@@ -1,9 +1,8 @@
 import numpy as np
-import formencode
-from formencode import validators
+import numbers
 
 
-class StraightLine():
+class StraightLine(object):
     """ A line in the form y = mx + b:
 
     Attributes:
@@ -16,13 +15,18 @@ class StraightLine():
         self.gradient = gradient
         self.y_intercept = y_intercept
 
-        # validators.Empty.to_python(gradient)
-        # validators.Number.to_python(gradient)
+        if not isinstance(gradient, numbers.Number):
+            raise ValueError('gradient must be a number')
+        if not isinstance(y_intercept, numbers.Number):
+            raise ValueError('y_intercept must be a number')
 
     def find_y_at_x(self, x_value):
         """ return the value of y at a given value of x
 
         """
+        if not isinstance(x_value, numbers.Number):
+            raise ValueError('x_value argument must be a number')
+
         y_value = x_value * self.gradient + self.y_intercept
         return y_value
 
@@ -30,6 +34,9 @@ class StraightLine():
         ''' finds the x value of intecept of self and another StraightLine
 
         '''
+        if not isinstance(other_line, StraightLine):
+            raise ValueError('other_line must be StraightLine objects')
+
         m1 = self.gradient
         m2 = other_line.gradient
 
@@ -47,7 +54,12 @@ class StraightLine():
 
         other_lines in the form {"other_line_name1": x1, "other_line_name2": x2 ...etc }
 
+        ### MAKE LIST INPUT OPTION??
+
         """
+        if not isinstance(other_lines, dict):
+            raise ValueError("other_lines must be dictionary with other line's names as keys and StraightLine objects as values")
+
         intercepts_on_line_dict = dict()
         for other_line in other_lines:
             intercepts_on_line_dict[other_line] = self.find_intercept_on_line(
@@ -60,25 +72,70 @@ class LoadDurationCurve():
     '''
     '''
 
-    def __init__(self, curve_data, as_percent, as_proportion, granularity):
+    def __init__(self, curve_data, as_percent, peak_demand, as_proportion, granularity):
         self.curve_data = curve_data
         self.as_percent = as_percent
+        self.peak_demand = peak_demand
         self.as_proportion = as_proportion
         self.granularity = granularity
 
-    def calculate_ldc_areas(self, generator_rank_list):
+    def locate_y_at_x(self, x_value, return_index=False):
         '''
         '''
+        index = 0
+        for this_value, that_value in zip(self.curve_data[0][:-1], self.curve_data[0][1:]):
+            if x_value < this_value and x_value >= that_value:
+                if return_index:
+                    return {'y': self.curve_data[1][index], 'index': index}
+                    break
+                else:
+                    return self.curve_data[1][index]
+                    break
+            elif x_value == this_value and x_value == that_value:
+                if return_index:
+                    return {'y': 0, 'index': 0}
+                else:
+                    return 0
+            index += 1
 
-        # find start
-        for x in [x_value[1] for x_value in generator_rank_list[1:]]:
-            index = 0
-            # print x
-            for this_value, that_value in zip(self.curve_data[0][:-1], self.curve_data[0][1:]):
-                # print this_value, that_value
-                if x < this_value and x >= that_value:
-                    print self.curve_data[1][index]
-                index += 1
+    def calculate_ldc_area(self, x_values):
+        '''
+        '''
+        start_position = self.locate_y_at_x(x_values[1], return_index=True)
+        start_position_slice = start_position['index']
+        finish_position = self.locate_y_at_x(x_values[0], return_index=True)
+        finish_position_slice = finish_position['index']
+        curve_interval_x_list = zip(
+            self.curve_data[0][start_position_slice:(finish_position_slice - 1)],
+            self.curve_data[0][(start_position_slice + 1): finish_position_slice])
+        if self.as_percent:
+            # y_deltas are all same
+            y_delta = self.peak_demand * (self.curve_data[1][1] - self.curve_data[1][0])
+        else:
+            y_delta = self.curve_data[1][1] - self.curve_data[1][0]
+        cumulative_area = 0
+        count = 0
+        for interval_start_x, interval_finish_x in curve_interval_x_list:
+            # calculate interval area
+            interval_area = y_delta * (interval_start_x + interval_finish_x) / 2
+            cumulative_area += interval_area
+            count += 1
+        if self.as_proportion:
+            return cumulative_area * 8760
+        else:
+            return cumulative_area
+
+    def required_capacities(self, generator_rank_list, yearly_outputs=False):
+        '''
+        '''
+        required_capacities_dict = dict()
+        required_capacities_dict[generator_rank_list[0][0]] = self.locate_y_at_x(generator_rank_list[0][1])
+        required_capacities_dict[generator_rank_list[-1][0]] = self.locate_y_at_x(generator_rank_list[-1][1])
+        for generator in generator_rank_list[1:-1]:
+            required_capacities_dict[generator[0]] = self.locate_y_at_x(generator[1])
+
+        # to finish this off for yearly_outputs use calculate_ldc_area with x values of generator_rank_list
+        # need to account for as_percent and as_proportion
 
 
 class PowerDemandTimeSeries():
@@ -101,10 +158,19 @@ class PowerDemandTimeSeries():
         peak_demand = self.demand_array.max()
         return peak_demand
 
+    def base_demand(self):
+        peak_demand = self.demand_array.min()
+        return peak_demand
+
+    def total_energy_demand(self):
+        total_energy = self.demand_array.sum()
+        return total_energy
+
     def change_power_unit(self, new_power_unit):
-        """ returns a new PowerDemandTimeSeries with power in newly specified units
+        """ changes the power unit of self
 
         'W' = watts
+        'KW' = kilowatts
         'MW' = megawatts
         'GW' = gigawatts
         'TW' = terawatts
@@ -112,13 +178,14 @@ class PowerDemandTimeSeries():
         """
         power_unit_factors_dict = {
             'W': 1,
-            'MW': 0.001,
-            'GW': 0.000001,
-            'TW': 0.000000001
+            'KW': 0.001,
+            'MW': 0.000001,
+            'GW': 0.000000001,
+            'TW': 0.000000000001
         }
         demand_in_old_units = self.demand_array
-        demand_in_new_units = power_unit_factors_dict[new_power_unit] * demand_in_old_units / power_unit_factors_dict[self.power_unit]
-        return demand_in_new_units
+        self.demand_array = power_unit_factors_dict[new_power_unit] * demand_in_old_units / power_unit_factors_dict[self.power_unit]
+        self.power_unit = new_power_unit
 
     def create_load_duration_curve(self, as_percent=True, as_proportion=True, granularity=100):
         '''takes hourly demand data for a period
@@ -137,7 +204,7 @@ class PowerDemandTimeSeries():
         duration_above_demand_level_list = list()
         for demand_level in demand_levels:
             count_above_demand_level = sum(self.demand_array >= demand_level)
-            if as_proportion == True:
+            if as_proportion:
                 proportion_above_demand_level = count_above_demand_level / float(len(self.demand_array))
                 duration_above_demand_level_list.append(proportion_above_demand_level)
             else:
@@ -145,7 +212,7 @@ class PowerDemandTimeSeries():
 
         duration_above_demand_level_plot = np.append(np.array(duration_above_demand_level_list), 0)
         demand_levels_plot = np.append(demand_levels, peak_demand)
-        if as_percent == True:
+        if as_percent:
             curve_data = [duration_above_demand_level_plot, 100 * demand_levels_plot / peak_demand]
 
         else:
@@ -153,6 +220,7 @@ class PowerDemandTimeSeries():
         load_duration_curve = LoadDurationCurve(
             curve_data=curve_data,
             as_percent=as_percent,
+            peak_demand=peak_demand,
             as_proportion=as_proportion,
             granularity=granularity
         )

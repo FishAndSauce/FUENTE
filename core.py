@@ -1,6 +1,7 @@
 from transformations import find_lowest_cost_envelope, plot_cost_curves
 from classes import StraightLine, PowerDemandTimeSeries, LoadDurationCurve
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # link to preprepared data
 working_data_store = pd.HDFStore('working_data_store.h5')
@@ -15,14 +16,8 @@ demand_profile = PowerDemandTimeSeries(
     time_unit="h",
     time_interval=1
 )
-
 load_duration_curve = demand_profile.create_load_duration_curve(as_percent=False, as_proportion=True, granularity=1000)
 print load_duration_curve
-plt.plot(load_duration_curve[0], load_duration_curve[1])
-axis_lims = [0, load_duration_curve[0].max(), 0, (1.01 * load_duration_curve[1].max())]
-
-plt.axis(axis_lims)
-plt.show()
 
 
 # get user inputs and generator characteristics
@@ -39,12 +34,17 @@ for generator in generators_included_list:
         )
 
 # caclulate ranking of generators which forms lowest cost envelope
-generator_rank_list= find_lowest_cost_envelope(generator_cost_curve_dict)
+generator_rank_list = find_lowest_cost_envelope(generator_cost_curve_dict)
 print generator_rank_list
 
 load_duration_curve.calculate_ldc_areas(generator_rank_list)
 
 # plot_cost_curves(generator_rank_list, generator_cost_curve_dict)
 
+plt.plot(load_duration_curve.curve_data[0], load_duration_curve.curve_data[1])
+# axis_lims = [0, load_duration_curve[0].max(), 0, (1.01 * load_duration_curve[1].max())]
 
+plt.scatter(0.73100288263465929, 20960.92222)
 
+# plt.axis(axis_lims)
+plt.show()

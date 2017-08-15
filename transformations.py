@@ -1,4 +1,3 @@
-import numpy as np
 from classes import StraightLine, PowerDemandTimeSeries
 from operator import attrgetter
 import copy

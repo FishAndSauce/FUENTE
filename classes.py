@@ -7,13 +7,15 @@ class StraightLine(object):
 
     Attributes:
         name: name of line
-        gradient: slope of line (m)
-        y_intercept: value of y at x=o (b)
+        gradient: value of slope of line (m)
+        y_intercept: value of y at x=0 (b)
+        x_range: range over which line exists as [x1, x2] (e.g. [2,6])
     """
 
-    def __init__(self, gradient, y_intercept):
+    def __init__(self, gradient, y_intercept, x_range=None):
         self.gradient = gradient
         self.y_intercept = y_intercept
+        self.x_range = x_range
 
         if not isinstance(gradient, numbers.Number):
             raise ValueError('gradient must be a number')
@@ -98,7 +100,7 @@ class LoadDurationCurve():
                     return 0
             index += 1
 
-    def calculate_ldc_area(self, x_values):
+    def calculate_ldc_section_area(self, x_values):
         '''
         '''
         start_position = self.locate_y_at_x(x_values[1], return_index=True)
@@ -125,17 +127,31 @@ class LoadDurationCurve():
         else:
             return cumulative_area
 
-    def required_capacities(self, generator_rank_list, yearly_outputs=False):
+    def required_capacities(self, generator_rank_list):
+        ''' determine required capacities and amount of electricity produced 
+            per year by each generator in rank list
         '''
-        '''
-        required_capacities_dict = dict()
-        required_capacities_dict[generator_rank_list[0][0]] = self.locate_y_at_x(generator_rank_list[0][1])
-        required_capacities_dict[generator_rank_list[-1][0]] = self.locate_y_at_x(generator_rank_list[-1][1])
-        for generator in generator_rank_list[1:-1]:
-            required_capacities_dict[generator[0]] = self.locate_y_at_x(generator[1])
+        change_back_to_as_percent = False
+        if self.as_percent:
+            self.curve_data = self.curve_data * self.peak_demand
+            self.as_percent = False
+            change_back_to_as_percent = True
 
-        # to finish this off for yearly_outputs use calculate_ldc_area with x values of generator_rank_list
-        # need to account for as_percent and as_proportion
+        required_capacities_dict = dict()
+        y_values_list = list()
+
+        for i, generator in enumerate(generator_rank_list[:-1]):
+            y_value1 = self.locate_y_at_x(generator_rank_list[i][1])
+            y_value2 = self.locate_y_at_x(generator_rank_list[i + 1][1])
+            y_values_list.append((generator[0], y_value1, y_value2))
+        y_value_1 = self.locate_y_at_x(generator_rank_list[-1][1])
+        y_values_list.append((generator_rank_list[-1][0], y_value_1, self.peak_demand))
+
+        for y_val in y_values_list:
+            required_capacities_dict[y_val[0]] = y_val[2] - y_val[1]
+        if change_back_to_as_percent:
+            self.as_percent = True
+        return required_capacities_dict
 
 
 class PowerDemandTimeSeries():
@@ -153,6 +169,9 @@ class PowerDemandTimeSeries():
         self.power_unit = power_unit
         self.time_unit = time_unit
         self.time_interval = time_interval
+
+        if time_unit not in ['s', 'm', 'h', 'd']:
+            raise ValueError('time_unit must be either "s", "m", "h", or "d"')
 
     def peak_demand(self):
         peak_demand = self.demand_array.max()
@@ -196,7 +215,7 @@ class PowerDemandTimeSeries():
         peak_demand = self.peak_demand()
 
         # create bins to sort data points
-        demand_levels = (peak_demand / granularity) * np.array(range(0, granularity))
+        demand_levels = (peak_demand / granularity) * np.array(range(0, granularity - 1))
 
         # count data points above each bin and create list noting that count
         # list is the LDC

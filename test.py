@@ -51,17 +51,26 @@ import matplotlib.pyplot as plt
 # axis_lims = [0, load_duration_curve[0].max(), 0, (1.01 * load_duration_curve[1].max())]
 
 
-my_line1 = StraightLine(gradient=10, y_intercept=5)
+my_line1 = StraightLine(gradient=10, y_intercept=5, x_range=[-2, 2])
 my_line2 = StraightLine(gradient=3, y_intercept=-6)
-my_line3 = StraightLine(gradient=2.5, y_intercept=-200)
-y_value = my_line1.find_y_at_x(6)
+my_line3 = StraightLine(gradient=2.5, y_intercept=-20)
 
-
-my_line_dict = {'my_line2': my_line2, 'my_line3': my_line3}
-
-intercept_of_2 = my_line1.find_intercept_on_line(my_line2)
-intercept_of_3 = my_line1.find_intercept_on_line(my_line3)
-print 'my_line2 = ', intercept_of_2, 'my_line3 = ', intercept_of_3
+my_line_dict = {'my_line1': my_line1, 'my_line2': my_line2, 'my_line3': my_line3}
 
 intercepts_of_all = my_line1.find_intercepts_on_line(my_line_dict)
-print intercepts_of_all
+
+x_range = [-4, 4]
+
+for line in my_line_dict.values():
+    if line.x_range:
+        x_values = [line.x_range[0], line.x_range[1]]
+        y_values = [line.find_y_at_x(x_values[0]), line.find_y_at_x(x_values[1])]
+        print y_values, x_values
+        plt.plot(x_values, y_values)
+    else:
+        x_values = x_range
+        y_values = [line.find_y_at_x(x_values[0]), line.find_y_at_x(x_values[1])]
+
+        plt.plot(x_values, y_values)
+
+plt.show()

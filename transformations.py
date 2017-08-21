@@ -99,7 +99,6 @@ def calculate_generation_per_year(load_duration_curve, generator_rank_list):
             x_values = [generator_rank_list[i + 1][1], generator[1]]
         else:
             x_values = [0, generator[1]]
-        print x_values
         area = load_duration_curve.calculate_ldc_section_area(x_values)
         area_dict[generator[0]] = area
     return area_dict

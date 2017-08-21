@@ -13,7 +13,7 @@ demand_profile = PowerDemandTimeSeries(
     time_unit="h",
     time_interval=1
 )
-load_duration_curve = demand_profile.create_load_duration_curve(as_percent=False, as_proportion=True, granularity=100)
+load_duration_curve = demand_profile.create_load_duration_curve(as_percent=False, as_proportion=True, granularity=1000)
 
 generators_included_characteristics_dataframe = working_data_store['generators_included_characteristics_dataframe']
 
@@ -31,6 +31,8 @@ for generator in generators_included_list:
 generator_rank_list = find_lowest_cost_envelope(generator_cost_curve_dict)
 
 required_capacities_dict = load_duration_curve.required_capacities(generator_rank_list)
+
+plot_cost_curves(generator_cost_curve_dict=generator_cost_curve_dict)
 
 plot_cost_curves(generator_cost_curve_dict=generator_cost_curve_dict, generator_rank_list=generator_rank_list)
 

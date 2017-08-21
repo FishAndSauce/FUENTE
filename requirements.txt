@@ -1,4 +1,5 @@
 pandas
-os
 numpy
 matplotlib.pyplot
+matplotlib.patches
+numbers

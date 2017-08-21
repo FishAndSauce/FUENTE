@@ -174,12 +174,12 @@ class PowerDemandTimeSeries():
             raise ValueError('time_unit must be either "s", "m", "h", or "d"')
 
     def peak_demand(self):
-        peak_demand = self.demand_array.max()
+        peak_demand = np.nanmax(self.demand_array)
         return peak_demand
 
     def base_demand(self):
-        peak_demand = self.demand_array.min()
-        return peak_demand
+        base_demand = np.nanmin(self.demand_array)
+        return base_demand
 
     def total_energy_demand(self):
         total_energy = self.demand_array.sum()

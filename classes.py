@@ -182,7 +182,7 @@ class PowerDemandTimeSeries():
         return base_demand
 
     def total_energy_demand(self):
-        total_energy = self.demand_array.sum()
+        total_energy = np.nansum(self.demand_array)
         return total_energy
 
     def change_power_unit(self, new_power_unit):

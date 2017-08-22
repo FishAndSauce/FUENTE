@@ -182,7 +182,7 @@ class PowerDemandTimeSeries():
         return base_demand
 
     def total_energy_demand(self):
-        total_energy = self.demand_array.sum()
+        total_energy = np.nansum(self.demand_array)
         return total_energy
 
     def change_power_unit(self, new_power_unit):
@@ -215,22 +215,28 @@ class PowerDemandTimeSeries():
         peak_demand = self.peak_demand()
 
         # create bins to sort data points
-        demand_levels = (peak_demand / granularity) * np.array(range(0, granularity - 1))
+        demand_levels = np.arange(0, self.peak_demand(), (peak_demand / granularity))
 
         # count data points above each bin and create list noting that count
         # list is the LDC
 
         duration_above_demand_level_list = list()
-        for demand_level in demand_levels:
-            count_above_demand_level = sum(self.demand_array >= demand_level)
+        demand_levels_array = self.demand_array
+        running_total = 0
+        for demand_level in reversed(demand_levels):
+            count_above_demand_level = sum(demand_levels_array >= demand_level) + running_total
+            running_total = count_above_demand_level
+            demand_levels_array = demand_levels_array[demand_levels_array <= demand_level]
+
             if as_proportion:
                 proportion_above_demand_level = count_above_demand_level / float(len(self.demand_array))
-                duration_above_demand_level_list.append(proportion_above_demand_level)
+                duration_above_demand_level_list.insert(0, proportion_above_demand_level)
             else:
-                duration_above_demand_level_list.append(count_above_demand_level)
+                duration_above_demand_level_list.insert(0, count_above_demand_level)
 
         duration_above_demand_level_plot = np.append(np.array(duration_above_demand_level_list), 0)
         demand_levels_plot = np.append(demand_levels, peak_demand)
+
         if as_percent:
             curve_data = [duration_above_demand_level_plot, 100 * demand_levels_plot / peak_demand]
 

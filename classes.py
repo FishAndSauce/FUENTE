@@ -198,10 +198,14 @@ class PowerDemandTimeSeries():
         if self.start_datetime and self.start_date_and_time:
             raise ValueError('you may sepcify either start_datetime OR start_date_and_time, not both')
 
+        if self.start_datetime:
+            if not isinstance(self.start_datetime, datetime.datetime):
+                raise ValueError('start_datetime must be datetime object. Alternatively you may enter the start_date_and_time parameter as tuple in the form (year, month, day, hour, minute, second, microsecond). If you choose to enter neither, the default start date will be (1900, 1, 1, 0, 0, 0, 0)')
+
         if self.time_unit not in ['microseconds', 'milliseconds', 'seconds', 'minutes', 'hours', 'days', 'weeks']:
             raise ValueError('time_unit must be set as either "microseconds", "milliseconds", "seconds", "minutes", "hours", "days" or "weeks"')
 
-    def series_resample(self, new_time_unit, new_time_interval):
+    def create_datetime_series(self):
 
         if self.start_datetime:
             base_datetime = self.start_datetime
@@ -227,9 +231,13 @@ class PowerDemandTimeSeries():
 
         datetime_list = [base_datetime + x * time_increment for x in np.arange(0, number_of_increments)]
 
-        demand_timeseries_df = pd.DataFrame({'datetime': datetime_list, 'demand_array': self.demand_array}).set_index('datetime')
+        return datetime_list
 
-        print demand_timeseries_df
+    def series_resample(self, new_time_unit, new_time_interval):
+
+        datetime_series = self.create_datetime_series()
+
+        demand_timeseries_df = pd.DataFrame({'datetime': datetime_series, 'demand_array': self.demand_array}).set_index('datetime')
 
         resample_option_dict = {
             'microseconds': 'us',
@@ -241,8 +249,7 @@ class PowerDemandTimeSeries():
             'weeks': 'W'
         }
         rule_string = str(new_time_interval) + resample_option_dict[new_time_unit]
-        resampled_demand_timeseries_df = demand_timeseries_df.resample(rule=rule_string, how="mean").ffill()
-        print resampled_demand_timeseries_df
+        resampled_demand_timeseries_df = demand_timeseries_df.resample(rule=rule_string).mean().ffill()
         self.demand_array = resampled_demand_timeseries_df['demand_array']
         self.time_unit = new_time_unit
         self.time_interval = new_time_interval
@@ -254,8 +261,7 @@ class PowerDemandTimeSeries():
     def base_demand(self):
         base_demand = np.nanmin(self.demand_array)
         return base_demand
-      
-      
+
     def total_energy_demand(self, energy_units):
 
         # total_energy = np.nansum(self.demand_array)

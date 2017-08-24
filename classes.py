@@ -1,5 +1,8 @@
 import numpy as np
 import numbers
+import pandas as pd
+import datetime
+from datetime import timedelta
 
 
 class StraightLine(object):
@@ -56,7 +59,7 @@ class StraightLine(object):
 
         other_lines in the form {"other_line_name1": x1, "other_line_name2": x2 ...etc }
 
-        ### MAKE LIST INPUT OPTION??
+        # MAKE LIST INPUT OPTION??
 
         """
         if not isinstance(other_lines, dict):
@@ -128,7 +131,7 @@ class LoadDurationCurve():
             return cumulative_area
 
     def required_capacities(self, generator_rank_list):
-        ''' determine required capacities and amount of electricity produced 
+        ''' determine required capacities and amount of electricity produced
             per year by each generator in rank list
         '''
         change_back_to_as_percent = False
@@ -164,14 +167,85 @@ class PowerDemandTimeSeries():
         demand_array: 1d numpy array of demand values over a period
     """
 
-    def __init__(self, demand_array, power_unit, time_unit, time_interval):
+    def __init__(
+        self,
+        demand_array,
+        power_unit,
+        time_unit,
+        time_interval=1,
+        start_datetime=None,
+        start_date_and_time=None
+    ):
+        '''
+        power_unit:
+        'W' = watts
+        'kW' = kilowatts
+        'MW' = megawatts
+        'GW' = gigawatts
+        'TW' = terawatts
+
+        start_datetime: datetime object
+        start_date_and_time: (yyyy, mm, dd, h, m, s, ms)
+        '''
+
         self.demand_array = np.array(demand_array)
         self.power_unit = power_unit
         self.time_unit = time_unit
         self.time_interval = time_interval
+        self.start_datetime = start_datetime
+        self.start_date_and_time = start_date_and_time
 
-        if time_unit not in ['s', 'm', 'h', 'd']:
-            raise ValueError('time_unit must be either "s", "m", "h", or "d"')
+        if self.start_datetime and self.start_date_and_time:
+            raise ValueError('you may sepcify either start_datetime OR start_date_and_time, not both')
+
+        if self.time_unit not in ['microseconds', 'milliseconds', 'seconds', 'minutes', 'hours', 'days', 'weeks']:
+            raise ValueError('time_unit must be set as either "microseconds", "milliseconds", "seconds", "minutes", "hours", "days" or "weeks"')
+
+    def series_resample(self, new_time_unit, new_time_interval):
+
+        if self.start_datetime:
+            base_datetime = self.start_datetime
+        elif self.start_date_and_time:
+            base_datetime = datetime.datetime(self.start_date_and_time)
+        else:
+            base_datetime = datetime.datetime(1900, 1, 1, 0, 0, 0, 0)
+
+        number_of_increments = len(self.demand_array)
+
+        timedelta_dict = {
+            'microseconds'
+            'milliseconds': (1.0 / 3600000),
+            'seconds': (1.0 / 3600),
+            'minutes': (1.0 / 60),
+            'hours': 1,
+            'days': 24,
+            'weeks': 168
+        }
+
+        # calculate end_datetime
+        time_increment = timedelta(hours=timedelta_dict[self.time_unit] * self.time_interval)
+
+        datetime_list = [base_datetime + x * time_increment for x in np.arange(0, number_of_increments)]
+
+        demand_timeseries_df = pd.DataFrame({'datetime': datetime_list, 'demand_array': self.demand_array}).set_index('datetime')
+
+        print demand_timeseries_df
+
+        resample_option_dict = {
+            'microseconds': 'us',
+            'milliseconds': 'ms',
+            'seconds': 'S',
+            'minutes': 'min',
+            'hours': 'H',
+            'days': 'D',
+            'weeks': 'W'
+        }
+        rule_string = str(new_time_interval) + resample_option_dict[new_time_unit]
+        resampled_demand_timeseries_df = demand_timeseries_df.resample(rule=rule_string, how="mean").ffill()
+        print resampled_demand_timeseries_df
+        self.demand_array = resampled_demand_timeseries_df['demand_array']
+        self.time_unit = new_time_unit
+        self.time_interval = new_time_interval
 
     def peak_demand(self):
         peak_demand = np.nanmax(self.demand_array)
@@ -180,28 +254,70 @@ class PowerDemandTimeSeries():
     def base_demand(self):
         base_demand = np.nanmin(self.demand_array)
         return base_demand
+      
+      
+    def total_energy_demand(self, energy_units):
 
-    def total_energy_demand(self):
-        total_energy = np.nansum(self.demand_array)
-        return total_energy
+        # total_energy = np.nansum(self.demand_array)
+        if energy_units not in ['J', 'MJ', 'GJ', 'TJ', 'Wh', 'kWh', 'MWh', 'GWh', 'TWh']:
+            raise ValueError('energy_units must be set as either "J", "MJ", "GJ", "TJ", Wh","kWh","MWh","GWh" or "TWh"')
 
-    def change_power_unit(self, new_power_unit):
-        """ changes the power unit of self
+        day = (1.0 / 24)
+        week = (1.0 / 168)
+        time_unit_dict_factors = {
+            'microseconds': 3600000000.0,
+            'milliseconds': 3600000.0,
+            'seconds': 3600.0,
+            'minutes': 60.0,
+            'hours': 1.0,
+            'days': day,
+            'weeks': week
+        }
 
-        'W' = watts
-        'KW' = kilowatts
-        'MW' = megawatts
-        'GW' = gigawatts
-        'TW' = terawatts
+        energy_unit_factors_dict = {
+            'J': 0,
+            'MJ': 0,
+            'GJ': 0,
+            'TJ': 0,
+            'Wh': 1,
+            'kWh': 0.001,
+            'MWh': 0.000001,
+            'GWh': 0.000000001,
+            'TWh': 0.000000000001
+        }
 
-        """
         power_unit_factors_dict = {
             'W': 1,
-            'KW': 0.001,
+            'kW': 0.001,
             'MW': 0.000001,
             'GW': 0.000000001,
             'TW': 0.000000000001
         }
+
+        total_energy_base_units = np.nansum(self.demand_array) * self.time_interval
+
+        energy_change_ratio = power_unit_factors_dict[self.power_unit] / energy_unit_factors_dict[energy_units]
+        time_change_ratio = 1 / time_unit_dict_factors[self.time_unit]
+
+        total_energy_new_units = total_energy_base_units * time_change_ratio * energy_change_ratio
+
+        return total_energy_new_units
+
+    def change_power_unit(self, new_power_unit):
+        """ changes the power unit
+
+        """
+        power_unit_factors_dict = {
+            'W': 1,
+            'kW': 0.001,
+            'MW': 0.000001,
+            'GW': 0.000000001,
+            'TW': 0.000000000001
+        }
+
+        if new_power_unit not in power_unit_factors_dict:
+            raise ValueError('new_power_unit must be set as either "W","kW","MW","GW" or "TW"')
+
         demand_in_old_units = self.demand_array
         self.demand_array = power_unit_factors_dict[new_power_unit] * demand_in_old_units / power_unit_factors_dict[self.power_unit]
         self.power_unit = new_power_unit

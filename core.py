@@ -7,6 +7,16 @@ import time
 # link to preprepared data
 working_data_store = pd.HDFStore('working_data_store.h5')
 
+hourly_demand_dataframe = working_data_store['hourly_demand_dataframe']
+
+demand_profile = PowerDemandTimeSeries(
+    hourly_demand_dataframe['hourly_demand'],
+    power_unit="MW",
+    time_unit="hours",
+    time_interval=1
+)
+load_duration_curve = demand_profile.create_load_duration_curve(as_percent=False, as_proportion=True, granularity=1000)
+
 generators_included_characteristics_dataframe = working_data_store['generators_included_characteristics_dataframe']
 hourly_demand_dataframe = working_data_store['hourly_demand_dataframe']
 

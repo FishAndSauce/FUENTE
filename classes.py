@@ -196,6 +196,9 @@ class PowerDemandTimeSeries():
         self.start_datetime = start_datetime
         self.start_date_and_time = start_date_and_time
 
+        if self.power_units not in ['W', 'kW', 'MW', 'GW', 'TW']:
+            raise ValueError('energy_units must be set as either "W","kW","MW","GW" or "TW"')
+
         if self.start_datetime and self.start_date_and_time:
             raise ValueError('you may sepcify either start_datetime OR start_date_and_time, not both')
 
@@ -349,7 +352,7 @@ class PowerDemandTimeSeries():
             plt.show()
 
         superposed_series_df = concatenated_series_clean_df.groupby(concatenated_series_clean_df.columns, axis=1).sum()
-        print superposed_series_df
+
         superposed_series = PowerDemandTimeSeries(
             demand_array=superposed_series_df['demand_array'],
             power_unit=self.power_unit,
@@ -383,8 +386,8 @@ class PowerDemandTimeSeries():
     def total_energy_demand(self, energy_units):
 
         # total_energy = np.nansum(self.demand_array)
-        if energy_units not in ['J', 'MJ', 'GJ', 'TJ', 'Wh', 'kWh', 'MWh', 'GWh', 'TWh']:
-            raise ValueError('energy_units must be set as either "J", "MJ", "GJ", "TJ", Wh","kWh","MWh","GWh" or "TWh"')
+        if energy_units not in ['J', 'kJ', 'MJ', 'GJ', 'TJ', 'Wh', 'kWh', 'MWh', 'GWh', 'TWh']:
+            raise ValueError('energy_units must be set as either "J", "kJ", MJ", "GJ", "TJ", Wh","kWh","MWh","GWh" or "TWh"')
 
         day = (1.0 / 24)
         week = (1.0 / 168)
@@ -399,10 +402,11 @@ class PowerDemandTimeSeries():
         }
 
         energy_unit_factors_dict = {
-            'J': 0,
-            'MJ': 0,
-            'GJ': 0,
-            'TJ': 0,
+            'J': 3600.0,
+            'kJ': 3.6,
+            'MJ': 0.0036,
+            'GJ': 0.0000036,
+            'TJ': 0.0000000036,
             'Wh': 1,
             'kWh': 0.001,
             'MWh': 0.000001,

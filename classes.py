@@ -263,10 +263,20 @@ class PowerDemandTimeSeries():
         self.time_unit = new_time_unit
         self.time_interval = new_time_interval
 
-    def superpose_single(self, other_demand_series, time_unit=None, time_interval=None, test_plot=False):
+    def superpose_single(self, other_demand_series, time_unit=None, time_interval=None, test_plot=False, power_unit=None):
 
-        same_unit = (self.time_unit == time_unit)
-        same_interval = (self.time_interval == time_interval)
+        same_time_unit = (self.time_unit == time_unit)
+        same_time_interval = (self.time_interval == time_interval)
+
+        # change power units if specified
+        if power_unit:
+            for unit in [self.power_unit, other_demand_series.power_unit]:
+                if unit != power_unit:
+                    unit.change_power_unit(power_unit)
+        # if not specified, check that power units are the same in each series
+        # change to match self
+        elif self.power_unit != other_demand_series.power_unit:
+            other_demand_series.change_power_unit(self.power_unit)
 
         # if resample specified
         if any([time_unit, time_interval]):
@@ -277,8 +287,8 @@ class PowerDemandTimeSeries():
             for series in [self, other_demand_series]:
                 series.series_resample(new_time_unit=time_unit, new_time_interval=time_interval)
         # if resample not specified but samples not same
-        # default to self sample properties
-        elif False in [same_unit, same_interval]:
+        # default to units of self sample
+        elif False in [same_time_unit, same_time_interval]:
             time_unit = self.time_unit
             time_interval = self.time_interval
             other_demand_series.series_resample(new_time_unit=time_unit, new_time_interval=time_interval)
@@ -329,7 +339,9 @@ class PowerDemandTimeSeries():
 
             gap_series_df = gap_series.create_datetime_series()
 
-        concatenated_series_df = pd.concat([self_datetime_series_df, other_datetime_series_df, gap_series_df], axis=1)
+            concatenated_series_df = pd.concat([self_datetime_series_df, other_datetime_series_df, gap_series_df], axis=1)
+        else:
+            concatenated_series_df = pd.concat([self_datetime_series_df, other_datetime_series_df], axis=1)
         concatenated_series_clean_df = concatenated_series_df.fillna(0)
 
         if test_plot == True:
@@ -347,7 +359,7 @@ class PowerDemandTimeSeries():
 
         return superposed_series
 
-    def superpose(self, other_demand_series, time_unit=None, time_interval=None, test_plot=False):
+    def superpose(self, other_demand_series, time_unit=None, time_interval=None, test_plot=False, power_unit=None):
 
         superposed_series = self
 

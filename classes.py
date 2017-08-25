@@ -3,6 +3,7 @@ import numbers
 import pandas as pd
 import datetime
 from datetime import timedelta
+import matplotlib.pyplot as plt
 
 
 class StraightLine(object):
@@ -210,14 +211,22 @@ class PowerDemandTimeSeries():
         if self.start_datetime:
             base_datetime = self.start_datetime
         elif self.start_date_and_time:
-            base_datetime = datetime.datetime(self.start_date_and_time)
+            year = self.start_date_and_time[0]
+            month = self.start_date_and_time[1]
+            day = self.start_date_and_time[2]
+            hour = self.start_date_and_time[3]
+            minute = self.start_date_and_time[4]
+            second = self.start_date_and_time[5]
+            millisecond = self.start_date_and_time[6]
+
+            base_datetime = datetime.datetime(year, month, day, hour, minute, second, millisecond)
         else:
             base_datetime = datetime.datetime(1900, 1, 1, 0, 0, 0, 0)
 
         number_of_increments = len(self.demand_array)
 
         timedelta_dict = {
-            'microseconds'
+            'microseconds': (1.0 / 3600000000),
             'milliseconds': (1.0 / 3600000),
             'seconds': (1.0 / 3600),
             'minutes': (1.0 / 60),
@@ -229,15 +238,15 @@ class PowerDemandTimeSeries():
         # calculate end_datetime
         time_increment = timedelta(hours=timedelta_dict[self.time_unit] * self.time_interval)
 
-        datetime_list = [base_datetime + x * time_increment for x in np.arange(0, number_of_increments)]
+        datetime_series = [base_datetime + x * time_increment for x in np.arange(0, number_of_increments)]
 
-        return datetime_list
+        demand_timeseries_df = pd.DataFrame({'datetime': datetime_series, 'demand_array': self.demand_array}).set_index('datetime')
+
+        return demand_timeseries_df
 
     def series_resample(self, new_time_unit, new_time_interval):
 
-        datetime_series = self.create_datetime_series()
-
-        demand_timeseries_df = pd.DataFrame({'datetime': datetime_series, 'demand_array': self.demand_array}).set_index('datetime')
+        demand_timeseries_df = self.create_datetime_series()
 
         resample_option_dict = {
             'microseconds': 'us',
@@ -253,6 +262,115 @@ class PowerDemandTimeSeries():
         self.demand_array = resampled_demand_timeseries_df['demand_array']
         self.time_unit = new_time_unit
         self.time_interval = new_time_interval
+
+    def superpose_single(self, other_demand_series, time_unit=None, time_interval=None, test_plot=False, power_unit=None):
+
+        same_time_unit = (self.time_unit == time_unit)
+        same_time_interval = (self.time_interval == time_interval)
+
+        # change power units if specified
+        if power_unit:
+            for unit in [self.power_unit, other_demand_series.power_unit]:
+                if unit != power_unit:
+                    unit.change_power_unit(power_unit)
+        # if not specified, check that power units are the same in each series
+        # change to match self
+        elif self.power_unit != other_demand_series.power_unit:
+            other_demand_series.change_power_unit(self.power_unit)
+
+        # if resample specified
+        if any([time_unit, time_interval]):
+            if not time_unit:
+                time_unit = self.time_unit
+            if not time_interval:
+                time_interval = self.time_interval
+            for series in [self, other_demand_series]:
+                series.series_resample(new_time_unit=time_unit, new_time_interval=time_interval)
+        # if resample not specified but samples not same
+        # default to units of self sample
+        elif False in [same_time_unit, same_time_interval]:
+            time_unit = self.time_unit
+            time_interval = self.time_interval
+            other_demand_series.series_resample(new_time_unit=time_unit, new_time_interval=time_interval)
+        else:
+            time_unit = self.time_unit
+            time_interval = self.time_interval
+
+        self_datetime_series_df = self.create_datetime_series()
+        other_datetime_series_df = other_demand_series.create_datetime_series()
+        print self_datetime_series_df
+        # check if gap between series
+        self_start = self_datetime_series_df.first_valid_index()
+        other_start = other_datetime_series_df.first_valid_index()
+        self_finish = self_datetime_series_df.last_valid_index()
+        other_finish = other_datetime_series_df.last_valid_index()
+
+        # if gap, define start and length
+        gap = False
+        if ((self_finish - other_start).total_seconds() < 0):
+            gap = True
+            series_gap = other_start - self_finish
+            series_gap_start = self_finish
+        elif ((other_finish - self_start).total_seconds() < 0):
+            gap = True
+            series_gap = self_start - other_finish
+            series_gap_start = other_finish
+
+        # if gap exists, create a time series dataframe for it
+        if gap:
+            timedelta_dict = {
+                'microseconds': (1000000.0),
+                'milliseconds': (1000.0),
+                'seconds': (1.0),
+                'minutes': (1.0 / 60),
+                'hours': (1.0 / 3600),
+                'days': (1.0 / 86400),
+                'weeks': (1.0 / 604800)
+            }
+            gap_number_of_intervals = series_gap.total_seconds() * timedelta_dict[time_unit] / time_interval
+            gap_demand_array = [0] * int(gap_number_of_intervals)
+            gap_series = PowerDemandTimeSeries(
+                demand_array=gap_demand_array,
+                power_unit=self.power_unit,
+                time_unit=time_unit,
+                time_interval=time_interval,
+                start_datetime=series_gap_start
+            )
+
+            gap_series_df = gap_series.create_datetime_series()
+
+            concatenated_series_df = pd.concat([self_datetime_series_df, other_datetime_series_df, gap_series_df], axis=1)
+        else:
+            concatenated_series_df = pd.concat([self_datetime_series_df, other_datetime_series_df], axis=1)
+        concatenated_series_clean_df = concatenated_series_df.fillna(0)
+
+        if test_plot == True:
+            concatenated_series_clean_df.plot()
+            plt.show()
+
+        superposed_series_df = concatenated_series_clean_df.groupby(concatenated_series_clean_df.columns, axis=1).sum()
+        print superposed_series_df
+        superposed_series = PowerDemandTimeSeries(
+            demand_array=superposed_series_df['demand_array'],
+            power_unit=self.power_unit,
+            time_unit=time_unit,
+            time_interval=time_interval
+        )
+
+        return superposed_series
+
+    def superpose(self, other_demand_series, time_unit=None, time_interval=None, test_plot=False, power_unit=None):
+
+        superposed_series = self
+
+        for series in other_demand_series:
+            superposed_series = superposed_series.superpose_single(other_demand_series=series, time_unit=time_unit, time_interval=time_interval, test_plot=test_plot)
+
+        return superposed_series
+
+    def plot_demand_series(self):
+        demand_series_df = self.create_datetime_series()
+        demand_series_df.plot()
 
     def peak_demand(self):
         peak_demand = np.nanmax(self.demand_array)

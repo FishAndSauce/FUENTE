@@ -1,5 +1,6 @@
 from transformations import find_lowest_cost_envelope, plot_cost_curves, calculate_generation_per_year, plot_ldc_areas
-from classes import StraightLine, PowerDemandTimeSeries
+from geometry_monkey import StraightLine
+from energy_data_monkey import PowerTimeSeries
 import pandas as pd
 import time
 
@@ -8,6 +9,7 @@ import time
 working_data_store = pd.HDFStore('working_data_store.h5')
 
 hourly_demand_dataframe = working_data_store['hourly_demand_dataframe']
+wind_and_solar_dataframe = working_data_store['wind_and_solar_dataframe']
 
 generators_included_characteristics_dataframe = working_data_store['generators_included_characteristics_dataframe']
 hourly_demand_dataframe = working_data_store['hourly_demand_dataframe']
@@ -30,16 +32,32 @@ generator_rank_list = find_lowest_cost_envelope(generator_cost_curve_dict)
 print 'find_lowest_cost_envelope ', time.clock() - start
 
 start = time.clock()
-demand_profile = PowerDemandTimeSeries(
-    hourly_demand_dataframe['hourly_demand'],
+demand_profile = PowerTimeSeries(
+    demand_array=hourly_demand_dataframe['hourly_demand'],
     power_unit="MW",
     time_unit="hours",
     time_interval=1
 )
-print 'PowerDemandTimeSeries ', time.clock() - start
+print 'PowerTimeSeries ', time.clock() - start
+
+solar_profile = PowerTimeSeries(
+    demand_array=wind_and_solar_dataframe['solar_output_at_1MW_capacity'] * 2000,
+    power_unit="MW",
+    time_unit="hours",
+    time_interval=1
+)
+
+wind_profile = PowerTimeSeries(
+    demand_array=wind_and_solar_dataframe['wind_output_at_1MW_capacity'] * 1000,
+    power_unit="MW",
+    time_unit="hours",
+    time_interval=1
+)
+
+residual_demand = demand_profile.superpose(other_demand_series=[solar_profile, wind_profile], test_plot=False, time_unit='hours', time_interval=1)
 
 start = time.clock()
-load_duration_curve = demand_profile.create_load_duration_curve(as_percent=False, as_proportion=True, granularity=1000)
+load_duration_curve = residual_demand.create_load_duration_curve(as_percent=False, as_proportion=True, granularity=100)
 print 'create_load_duration_curve ', time.clock() - start
 
 start = time.clock()

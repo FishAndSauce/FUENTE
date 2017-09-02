@@ -89,7 +89,7 @@ class LoadDurationCurve():
         return required_capacities_dict
 
 
-class PowerDemandTimeSeries():
+class PowerTimeSeries():
     """ An uninterrupted time series of power demand
 
         Attributes:
@@ -127,7 +127,7 @@ class PowerDemandTimeSeries():
         self.start_datetime = start_datetime
         self.start_date_and_time = start_date_and_time
 
-        if self.power_units not in ['W', 'kW', 'MW', 'GW', 'TW']:
+        if self.power_unit not in ['W', 'kW', 'MW', 'GW', 'TW']:
             raise ValueError('energy_units must be set as either "W","kW","MW","GW" or "TW"')
 
         if self.start_datetime and self.start_date_and_time:
@@ -232,7 +232,6 @@ class PowerDemandTimeSeries():
 
         self_datetime_series_df = self.create_datetime_series()
         other_datetime_series_df = other_demand_series.create_datetime_series()
-        print self_datetime_series_df
         # check if gap between series
         self_start = self_datetime_series_df.first_valid_index()
         other_start = other_datetime_series_df.first_valid_index()
@@ -263,7 +262,7 @@ class PowerDemandTimeSeries():
             }
             gap_number_of_intervals = series_gap.total_seconds() * timedelta_dict[time_unit] / time_interval
             gap_demand_array = [0] * int(gap_number_of_intervals)
-            gap_series = PowerDemandTimeSeries(
+            gap_series = PowerTimeSeries(
                 demand_array=gap_demand_array,
                 power_unit=self.power_unit,
                 time_unit=time_unit,
@@ -284,7 +283,7 @@ class PowerDemandTimeSeries():
 
         superposed_series_df = concatenated_series_clean_df.groupby(concatenated_series_clean_df.columns, axis=1).sum()
 
-        superposed_series = PowerDemandTimeSeries(
+        superposed_series = PowerTimeSeries(
             demand_array=superposed_series_df['demand_array'],
             power_unit=self.power_unit,
             time_unit=time_unit,

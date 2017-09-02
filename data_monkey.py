@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import numpy as np
 
-# create preproced data storage 
+# create preproced data storage
 working_data_store = pd.HDFStore('working_data_store.h5')
 
 # set filepath chunks
@@ -17,6 +17,11 @@ year_paths = ('2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2
 demand_filepath = 'hourly_demand_data.csv'
 hourly_demand_data_path = os.path.join(root_path, data_path, raw_path, countries_paths[0], year_paths[3], demand_filepath)
 working_data_store['hourly_demand_dataframe'] = pd.read_csv(hourly_demand_data_path)
+
+# get wind and solar data
+wind_and_solar_filepath = 'hourly_wind_solar.csv'
+wind_and_solar_data_path = os.path.join(root_path, data_path, raw_path, countries_paths[0], year_paths[3], wind_and_solar_filepath)
+working_data_store['wind_and_solar_dataframe'] = pd.read_csv(wind_and_solar_data_path)
 
 # get user inputs and generator characteristics
 user_inputs_path = 'user_inputs'
@@ -47,9 +52,9 @@ generators_included_characteristics_dataframe['biomass_price_cost'] = np.where(
 
 # calculate total fuel cost ($/MW/yr) accounting for thermal efficiency of plant
 generators_included_characteristics_dataframe['total_fuel_cost'] = (365 * 24 * (generators_included_characteristics_dataframe['gas_price_cost']
-    + generators_included_characteristics_dataframe['coal_price_cost']
-    + generators_included_characteristics_dataframe['biomass_price_cost'])
-    /generators_included_characteristics_dataframe['Thermal Efficiency'])
+                                                                                + generators_included_characteristics_dataframe['coal_price_cost']
+                                                                                + generators_included_characteristics_dataframe['biomass_price_cost'])
+                                                                    / generators_included_characteristics_dataframe['Thermal Efficiency'])
 
 # calculate total emmissions cost (KgCO2e/MW/yr)
 generators_included_characteristics_dataframe['total_emissions_cost'] = (
@@ -58,11 +63,11 @@ generators_included_characteristics_dataframe['total_emissions_cost'] = (
 
 # calculate total variable cost
 generators_included_characteristics_dataframe['total_variable_cost'] = (generators_included_characteristics_dataframe['VOM/year ($/MW/yr)']
-    + generators_included_characteristics_dataframe['total_emissions_cost']
-    + generators_included_characteristics_dataframe['total_fuel_cost'])
+                                                                        + generators_included_characteristics_dataframe['total_emissions_cost']
+                                                                        + generators_included_characteristics_dataframe['total_fuel_cost'])
 
 # calculate total fixed cost
 generators_included_characteristics_dataframe['total_fixed_cost'] = (generators_included_characteristics_dataframe['Annualised Capital ($/MW/yr)']
-    + generators_included_characteristics_dataframe['FOM ($/MW/yr)'])
+                                                                     + generators_included_characteristics_dataframe['FOM ($/MW/yr)'])
 
 working_data_store['generators_included_characteristics_dataframe'] = generators_included_characteristics_dataframe

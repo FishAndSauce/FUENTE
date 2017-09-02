@@ -133,3 +133,23 @@ def plot_ldc_areas(load_duration_curve, generation_per_year_dict, generator_rank
     plt.fill_between(load_duration_curve.curve_data[0], load_duration_curve.curve_data[1], fill_above_ldc_array, color='white')
 
     plt.show()
+
+
+def calculate_cost_of_electricity(generation_per_year_dict, generator_rank_list, required_capacities_dict, carbon_emissions_cost_dict, vom_cost_dict, fom_cost_dict, annualised_capital_dict, generator_fuel_cost_dict):
+    total_cost_dict = dict()
+    for generator in generator_rank_list:
+        total_capital_cost = required_capacities_dict[generator[0]] * annualised_capital_dict[generator[0]]
+        total_fom_cost = required_capacities_dict[generator[0]] * fom_cost_dict[generator[0]]
+        total_vom_cost = generation_per_year_dict[generator[0]] * vom_cost_dict[generator[0]]
+        total_fuel_cost = generation_per_year_dict[generator[0]] * generator_fuel_cost_dict[generator[0]]
+        total_carbon_cost = generation_per_year_dict[generator[0]] * carbon_emissions_cost_dict[generator[0]]
+        total_cost_dict[generator[0]] = total_capital_cost + total_fom_cost + total_vom_cost + total_fuel_cost + total_carbon_cost
+    return total_cost_dict
+
+
+def calculate_lcoe(total_cost_dict, generation_per_year_dict, generator_rank_list):
+    lcoe_dict = dict()
+    for generator in generator_rank_list:
+        lcoe = total_cost_dict[generator[0]] / generation_per_year_dict[generator[0]]
+        lcoe_dict[generator[0]] = lcoe
+    return lcoe_dict

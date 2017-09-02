@@ -45,11 +45,7 @@ class LoadDurationCurve():
         curve_interval_x_list = zip(
             self.curve_data[0][start_position_slice:(finish_position_slice - 1)],
             self.curve_data[0][(start_position_slice + 1): finish_position_slice])
-        if self.as_percent:
-            # y_deltas are all same
-            y_delta = self.peak_demand * (self.curve_data[1][1] - self.curve_data[1][0])
-        else:
-            y_delta = self.curve_data[1][1] - self.curve_data[1][0]
+        y_delta = self.curve_data[1][1] - self.curve_data[1][0]
         cumulative_area = 0
         count = 0
         for interval_start_x, interval_finish_x in curve_interval_x_list:
@@ -57,10 +53,12 @@ class LoadDurationCurve():
             interval_area = y_delta * (interval_start_x + interval_finish_x) / 2
             cumulative_area += interval_area
             count += 1
+        if self.as_percent:
+            cumulative_area = cumulative_area * self.peak_demand
         if self.as_proportion:
-            return cumulative_area * 8760
-        else:
-            return cumulative_area
+            cumulative_area = cumulative_area * 8760
+
+        return cumulative_area
 
     def required_capacities(self, generator_rank_list):
         ''' determine required capacities and amount of electricity produced
@@ -394,59 +392,20 @@ class PowerTimeSeries():
         # list is the LDC
 
         duration_above_demand_level_list = list()
-        demand_levels_array = self.demand_array
-        running_total = 0
-        for demand_level in reversed(demand_levels):
-            count_above_demand_level = sum(demand_levels_array >= demand_level) + running_total
-            running_total = count_above_demand_level
-            demand_levels_array = demand_levels_array[demand_levels_array <= demand_level]
-
-            if as_proportion:
-                proportion_above_demand_level = count_above_demand_level / float(len(self.demand_array))
-                duration_above_demand_level_list.insert(0, proportion_above_demand_level)
-            else:
-                duration_above_demand_level_list.insert(0, count_above_demand_level)
-
-        duration_above_demand_level_plot = np.append(np.array(duration_above_demand_level_list), 0)
-        demand_levels_plot = np.append(demand_levels, peak_demand)
-
-        if as_percent:
-            curve_data = [duration_above_demand_level_plot, 100 * demand_levels_plot / peak_demand]
-
-        else:
-            curve_data = [duration_above_demand_level_plot, demand_levels_plot]
-        load_duration_curve = LoadDurationCurve(
-            curve_data=curve_data,
-            as_percent=as_percent,
-            peak_demand=peak_demand,
-            as_proportion=as_proportion,
-            granularity=granularity
-        )
-        return load_duration_curve
-
-    def create_load_duration_curve_test(self, as_percent=True, as_proportion=True, granularity=100):
-        '''takes hourly demand data for a period
-        returns a two np.arrays, one is list of demand levels
-        other is list of time duration spent above those demand levels
-        '''
-        peak_demand = self.peak_demand()
-
-        # create bins to sort data points
-        demand_levels = np.arange(0, self.peak_demand(), (peak_demand / granularity))
-
-        # count data points above each bin and create list noting that count
-        # list is the LDC
-
-        duration_above_demand_level_list = list()
-        demand_levels_array = list(self.demand_array)
-        length = len(demand_levels_array)
-        demand_levels_array.sort()
+        demand_list = list(self.demand_array)
+        length = len(demand_list)
+        demand_list.sort()
         count = 0
         for demand_level in reversed(demand_levels):
-            for i, demand in enumerate(demand_levels_array):
+            for i, demand in enumerate(demand_list):
                 if demand >= demand_level:
                     count = length - i
-                    duration_above_demand_level_list.append(count)
+
+                    if as_proportion:
+                        proportion_above_demand_level = count / float(length)
+                        duration_above_demand_level_list.append(proportion_above_demand_level)
+                    else:
+                        duration_above_demand_level_list.append(count)
                     break
 
         duration_above_demand_level_list.reverse()

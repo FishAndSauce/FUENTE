@@ -385,7 +385,6 @@ class PowerTimeSeries():
         returns a two np.arrays, one is list of demand levels
         other is list of time duration spent above those demand levels
         '''
-
         peak_demand = self.peak_demand()
 
         # create bins to sort data points
@@ -411,6 +410,49 @@ class PowerTimeSeries():
         duration_above_demand_level_plot = np.append(np.array(duration_above_demand_level_list), 0)
         demand_levels_plot = np.append(demand_levels, peak_demand)
 
+        if as_percent:
+            curve_data = [duration_above_demand_level_plot, 100 * demand_levels_plot / peak_demand]
+
+        else:
+            curve_data = [duration_above_demand_level_plot, demand_levels_plot]
+        load_duration_curve = LoadDurationCurve(
+            curve_data=curve_data,
+            as_percent=as_percent,
+            peak_demand=peak_demand,
+            as_proportion=as_proportion,
+            granularity=granularity
+        )
+        return load_duration_curve
+
+    def create_load_duration_curve_test(self, as_percent=True, as_proportion=True, granularity=100):
+        '''takes hourly demand data for a period
+        returns a two np.arrays, one is list of demand levels
+        other is list of time duration spent above those demand levels
+        '''
+        peak_demand = self.peak_demand()
+
+        # create bins to sort data points
+        demand_levels = np.arange(0, self.peak_demand(), (peak_demand / granularity))
+
+        # count data points above each bin and create list noting that count
+        # list is the LDC
+
+        duration_above_demand_level_list = list()
+        demand_levels_array = list(self.demand_array)
+        length = len(demand_levels_array)
+        demand_levels_array.sort()
+        count = 0
+        for demand_level in reversed(demand_levels):
+            for i, demand in enumerate(demand_levels_array):
+                if demand >= demand_level:
+                    count = length - i
+                    duration_above_demand_level_list.append(count)
+                    break
+
+        duration_above_demand_level_list.reverse()
+
+        duration_above_demand_level_plot = np.append(duration_above_demand_level_list, 0)
+        demand_levels_plot = np.append(demand_levels, peak_demand)
         if as_percent:
             curve_data = [duration_above_demand_level_plot, 100 * demand_levels_plot / peak_demand]
 

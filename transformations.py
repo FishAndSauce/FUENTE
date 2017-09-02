@@ -129,8 +129,7 @@ def plot_ldc_areas(load_duration_curve, generation_per_year_dict, generator_rank
     plt.legend(legend_list[0], legend_list[1], fontsize=10)
 
     fill_above_ldc_array = np.array([1.01 * sum_y_values] * (load_duration_curve.granularity + 1))
-    print len(load_duration_curve.curve_data[1])
-    print len(fill_above_ldc_array)
+
     plt.fill_between(load_duration_curve.curve_data[0], load_duration_curve.curve_data[1], fill_above_ldc_array, color='white')
 
     plt.show()

@@ -101,6 +101,8 @@ def calculate_generation_per_year(load_duration_curve, generator_rank_list):
             x_values = [0, generator[1]]
         area = load_duration_curve.calculate_ldc_section_area(x_values)
         area_dict[generator[0]] = area
+    total_area = sum(area_dict.values())
+    area_dict['aggregated_generators'] = total_area
     return area_dict
 
 
@@ -144,12 +146,14 @@ def calculate_cost_of_electricity(generation_per_year_dict, generator_rank_list,
         total_fuel_cost = generation_per_year_dict[generator[0]] * generator_fuel_cost_dict[generator[0]]
         total_carbon_cost = generation_per_year_dict[generator[0]] * carbon_emissions_cost_dict[generator[0]]
         total_cost_dict[generator[0]] = total_capital_cost + total_fom_cost + total_vom_cost + total_fuel_cost + total_carbon_cost
+    total_cost = sum(total_cost_dict.values())
+    total_cost_dict['aggregated_generators'] = total_cost
     return total_cost_dict
 
 
-def calculate_lcoe(total_cost_dict, generation_per_year_dict, generator_rank_list):
+def calculate_lcoe(total_cost_dict, generation_per_year_dict):
     lcoe_dict = dict()
-    for generator in generator_rank_list:
-        lcoe = total_cost_dict[generator[0]] / generation_per_year_dict[generator[0]]
-        lcoe_dict[generator[0]] = lcoe
+    for generator in generation_per_year_dict:
+        lcoe = total_cost_dict[generator] / generation_per_year_dict[generator]
+        lcoe_dict[generator] = lcoe
     return lcoe_dict

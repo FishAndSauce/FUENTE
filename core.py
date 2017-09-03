@@ -79,24 +79,24 @@ required_capacities_dict = load_duration_curve.required_capacities(generator_ran
 print 'required_capacities ', time.clock() - start
 
 
-# plot_cost_curves(generator_cost_curve_dict=generator_cost_curve_dict)
-# plot_cost_curves(generator_cost_curve_dict=generator_cost_curve_dict, generator_rank_list=generator_rank_list)
+plot_cost_curves(generator_cost_curve_dict=generator_cost_curve_dict)
+plot_cost_curves(generator_cost_curve_dict=generator_cost_curve_dict, generator_rank_list=generator_rank_list)
 
 start = time.clock()
 generation_per_year_dict = calculate_generation_per_year(load_duration_curve=load_duration_curve, generator_rank_list=generator_rank_list)
 print 'calculate_generation_per_year ', time.clock() - start
 
 
-# plot_ldc_areas(
-#     load_duration_curve=load_duration_curve,
-#     generation_per_year_dict=generation_per_year_dict,
-#     generator_rank_list=generator_rank_list,
-#     required_capacities_dict=required_capacities_dict
-# )
+plot_ldc_areas(
+    load_duration_curve=load_duration_curve,
+    generation_per_year_dict=generation_per_year_dict,
+    generator_rank_list=generator_rank_list,
+    required_capacities_dict=required_capacities_dict
+)
 
 print generator_fuel_cost_dict
 
 total_cost_dict = calculate_cost_of_electricity(generation_per_year_dict, generator_rank_list, required_capacities_dict, carbon_emissions_cost_dict, vom_cost_dict, fom_cost_dict, annualised_capital_dict, generator_fuel_cost_dict)
 print 'total_cost_dict ', total_cost_dict
-lcoe_dict = calculate_lcoe(total_cost_dict, generation_per_year_dict, generator_rank_list)
+lcoe_dict = calculate_lcoe(total_cost_dict, generation_per_year_dict)
 print 'lcoe_dict ', lcoe_dict

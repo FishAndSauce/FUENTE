@@ -43,6 +43,7 @@ print 'generator_cost_curve_dict ', time.clock() - start
 
 start = time.clock()
 generator_rank_list = find_lowest_cost_envelope(generator_cost_curve_dict)
+print generator_rank_list
 print 'find_lowest_cost_envelope ', time.clock() - start
 
 start = time.clock()

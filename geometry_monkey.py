@@ -67,3 +67,21 @@ class StraightLine(object):
                 other_lines[other_line]
             )
         return intercepts_on_line_dict
+
+    def plt_plot_prep(self, x_range=None):
+        ''' returns dict with x and y arrays for plotting StraightLine object in matplotlib.pyplot
+        in the form plt.plot(plot_dict['x'], plot_dict['y'])
+        '''
+        if not x_range:
+            if not self.x_range:
+                raise ValueError('x_range must be defined for StraightLine object, else you must specify x_range parameter in plt_prep method, e.g. [2,6]')
+            else:
+                x_range = self.x_range
+        else:
+            x_range = x_range
+
+        y_plot = [self.find_y_at_x(x_range[0]), self.find_y_at_x(x_range[1])]
+        x_plot = [(x_range[0]), (x_range[1])]
+        print x_plot, y_plot
+        plot_dict = {'x': x_plot, 'y': y_plot}
+        return plot_dict

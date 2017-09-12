@@ -78,11 +78,12 @@ def plot_cost_curves(generator_cost_curve_dict, generator_rank_list=None):
         for i, envelope_generator in enumerate(generator_rank_list):
             label = envelope_generator[0] + ', running @ ' + str(100 * round(envelope_generator[1], 4)) + '% of the year'
             if i != last_index:
-                x_values = [generator_rank_list[i + 1][1], envelope_generator[1]]
+                x_range = [generator_rank_list[i + 1][1], envelope_generator[1]]
             else:
-                x_values = [0, envelope_generator[1]]
-            y_values = [generator_cost_curve_dict[envelope_generator[0]].find_y_at_x(x_values[0]), generator_cost_curve_dict[envelope_generator[0]].find_y_at_x(x_values[1])]
-            plt.plot(x_values, y_values, linewidth=2, label=label)
+                x_range = [0, envelope_generator[1]]
+            plot_dict = generator_cost_curve_dict[envelope_generator[0]].plt_plot_prep(x_range=x_range)
+
+            plt.plot(plot_dict['x'], plot_dict['y'], linewidth=2, label=label)
 
     plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)
     plt.legend(loc='best', fontsize=10)

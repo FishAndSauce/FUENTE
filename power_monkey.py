@@ -331,7 +331,10 @@ class PowerTimeSeries():
         else:
             self.demand_array = self.demand_array * scale_factor
 
-    def total_energy_demand(self, energy_units):
+    def total_energy_demand(self, energy_units=None):
+
+        if not energy_units:
+            energy_units = 'kWh'
 
         # total_energy = np.nansum(self.demand_array)
         if energy_units not in ['J', 'kJ', 'MJ', 'GJ', 'TJ', 'Wh', 'kWh', 'MWh', 'GWh', 'TWh']:
@@ -447,22 +450,49 @@ class PowerTimeSeries():
         return load_duration_curve
 
     def create_load_duration_curve_test(self, as_percent=True, as_proportion=True, granularity=100):
+        '''takes hourly demand data for a period
+        returns a two np.arrays, one is list of demand levels
+        other is list of time duration spent above those demand levels
+        '''
 
         peak_demand = self.peak_demand()
         base_demand = self.base_demand()
-        duration_above_demand_level_plot = []
+        count_above_demand_level = []
 
-        # hist = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         histogram = np.histogram(self.demand_array, bins=granularity)
         buckets = list(histogram[0])
-        demand_levels_plot = list(histogram[1])
+        demand_levels_list = list(histogram[1])
+        # remove upper bin edges
+        del demand_levels_list[-1]
+        demand_levels_list.insert(0, base_demand)
+        demand_levels_list.insert(0, 0)
 
+        # represent as percentage of peak demand or as power units
+        if as_percent:
+            demand_levels = 100 * np.array(demand_levels_list) / peak_demand
+        else:
+            demand_levels = np.array(demand_levels_list)
+
+        last_sum = np.sum(buckets)
         for i, bucket in enumerate(reversed(buckets)):
-            count = np.sum(buckets[i:])
-            duration_above_demand_level_plot.append(count)
-        duration_above_demand_level_plot.append(0)
+            last_sum -= buckets[i]
 
-        curve_data = [duration_above_demand_level_plot, demand_levels_plot]
+            if as_proportion:
+                proportion_above_demand_level = last_sum / float(len(self.demand_array))
+                count_above_demand_level.append(proportion_above_demand_level)
+                total_time = 1
+            else:
+                count_above_demand_level.append(last_sum)
+                total_time = float(len(self.demand_array))
+        # take curve all the way to to x-axis
+        count_above_demand_level.insert(0, total_time)
+        count_above_demand_level.insert(0, total_time)
+
+        time_above_demand_level = np.array(count_above_demand_level)
+
+        curve_data = [time_above_demand_level, demand_levels]
+
+        # print zip(time_above_demand_level, demand_levels)
 
         load_duration_curve = LoadDurationCurve(
             curve_data=curve_data,

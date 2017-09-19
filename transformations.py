@@ -67,11 +67,11 @@ def find_lowest_cost_envelope(generator_cost_curve_dict):
 def plot_cost_curves(generator_cost_curve_dict, generator_rank_list=None):
 
     for generator in generator_cost_curve_dict:
-        plot_this = [generator_cost_curve_dict[generator].find_y_at_x(0), generator_cost_curve_dict[generator].find_y_at_x(1)]
+        curve_plot_dict = generator_cost_curve_dict[generator].plt_plot_prep(x_range=[0, 1])
         if generator_rank_list:
-            plt.plot([0, 1], plot_this, color='gray')
+            plt.plot(curve_plot_dict['x'], curve_plot_dict['y'], color='gray')
         else:
-            plt.plot([0, 1], plot_this, label=generator)
+            plt.plot(curve_plot_dict['x'], curve_plot_dict['y'], label=generator)
 
     if generator_rank_list:
         last_index = len(generator_rank_list) - 1
@@ -81,9 +81,9 @@ def plot_cost_curves(generator_cost_curve_dict, generator_rank_list=None):
                 x_range = [generator_rank_list[i + 1][1], envelope_generator[1]]
             else:
                 x_range = [0, envelope_generator[1]]
-            plot_dict = generator_cost_curve_dict[envelope_generator[0]].plt_plot_prep(x_range=x_range)
+            envelope_plot_dict = generator_cost_curve_dict[envelope_generator[0]].plt_plot_prep(x_range=x_range)
 
-            plt.plot(plot_dict['x'], plot_dict['y'], linewidth=2, label=label)
+            plt.plot(envelope_plot_dict['x'], envelope_plot_dict['y'], linewidth=2, label=label)
 
     plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)
     plt.legend(loc='best', fontsize=10)

@@ -18,7 +18,6 @@ working_data_store.close()
 
 generators_included_list = [x.encode('utf-8') for x in generators_included_characteristics_dataframe.index.tolist()]
 
-
 start = time.clock()
 generator_cost_curve_dict = dict()
 generator_fuel_cost_dict = dict()

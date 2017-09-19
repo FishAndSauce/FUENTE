@@ -1,4 +1,5 @@
 import numbers
+import matplotlib.pyplot as plt
 
 
 class StraightLine(object):
@@ -79,9 +80,49 @@ class StraightLine(object):
                 x_range = self.x_range
         else:
             x_range = x_range
-
         y_plot = [self.find_y_at_x(x_range[0]), self.find_y_at_x(x_range[1])]
         x_plot = [(x_range[0]), (x_range[1])]
-        print x_plot, y_plot
         plot_dict = {'x': x_plot, 'y': y_plot}
         return plot_dict
+
+    def quick_plot(self, *args, **kwargs):
+
+        plot_dict = self.plt_plot_prep(x_range=self.x_range)
+        plt.plot(plot_dict['x'], plot_dict['y'], *args, **kwargs)
+        plt.show()
+
+    def area_under_line(self, limits=None):
+
+        m = self.gradient
+        b = self.y_intercept
+
+        if limits:
+            x0 = limits[0]
+            x1 = limits[1]
+        else:
+            x0 = self.x_range[0]
+            x1 = self.x_range[1]
+
+        # from calculation of definite integral of straight line
+        area = m * ((x1**2) - (x0**2)) / 2 + b * (x1 - x0)
+        return area
+
+
+def points_to_line(points, keep_range=True):
+    ''' 
+
+    points specified as list of coords, e.g. [[1,1],[2,3]]
+    '''
+    x0 = points[0][0]
+    y0 = points[0][1]
+    x1 = points[1][0]
+    y1 = points[1][1]
+
+    m = (y1 - y0) / (x1 - x0)
+    b = y1 - m * x1
+
+    if keep_range:
+        x_range = [x0, x1]
+
+    line = StraightLine(gradient=m, y_intercept=b, x_range=x_range)
+    return line

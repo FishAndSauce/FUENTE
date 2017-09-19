@@ -18,7 +18,6 @@ working_data_store.close()
 
 generators_included_list = [x.encode('utf-8') for x in generators_included_characteristics_dataframe.index.tolist()]
 
-
 start = time.clock()
 generator_cost_curve_dict = dict()
 generator_fuel_cost_dict = dict()
@@ -43,6 +42,7 @@ print 'generator_cost_curve_dict ', time.clock() - start
 
 start = time.clock()
 generator_rank_list = find_lowest_cost_envelope(generator_cost_curve_dict)
+print generator_rank_list
 print 'find_lowest_cost_envelope ', time.clock() - start
 
 start = time.clock()

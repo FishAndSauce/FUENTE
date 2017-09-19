@@ -67,22 +67,23 @@ def find_lowest_cost_envelope(generator_cost_curve_dict):
 def plot_cost_curves(generator_cost_curve_dict, generator_rank_list=None):
 
     for generator in generator_cost_curve_dict:
-        plot_this = [generator_cost_curve_dict[generator].find_y_at_x(0), generator_cost_curve_dict[generator].find_y_at_x(1)]
+        curve_plot_dict = generator_cost_curve_dict[generator].plt_plot_prep(x_range=[0, 1])
         if generator_rank_list:
-            plt.plot([0, 1], plot_this, color='gray')
+            plt.plot(curve_plot_dict['x'], curve_plot_dict['y'], color='gray')
         else:
-            plt.plot([0, 1], plot_this, label=generator)
+            plt.plot(curve_plot_dict['x'], curve_plot_dict['y'], label=generator)
 
     if generator_rank_list:
         last_index = len(generator_rank_list) - 1
         for i, envelope_generator in enumerate(generator_rank_list):
             label = envelope_generator[0] + ', running @ ' + str(100 * round(envelope_generator[1], 4)) + '% of the year'
             if i != last_index:
-                x_values = [generator_rank_list[i + 1][1], envelope_generator[1]]
+                x_range = [generator_rank_list[i + 1][1], envelope_generator[1]]
             else:
-                x_values = [0, envelope_generator[1]]
-            y_values = [generator_cost_curve_dict[envelope_generator[0]].find_y_at_x(x_values[0]), generator_cost_curve_dict[envelope_generator[0]].find_y_at_x(x_values[1])]
-            plt.plot(x_values, y_values, linewidth=2, label=label)
+                x_range = [0, envelope_generator[1]]
+            envelope_plot_dict = generator_cost_curve_dict[envelope_generator[0]].plt_plot_prep(x_range=x_range)
+
+            plt.plot(envelope_plot_dict['x'], envelope_plot_dict['y'], linewidth=2, label=label)
 
     plt.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)
     plt.legend(loc='best', fontsize=10)

@@ -176,6 +176,19 @@ class PowerTimeSeries():
 
         return demand_timeseries_df
 
+    def series_trim(self, keep_range, test_plot=False):
+
+        demand_timeseries_df = self.create_datetime_series()
+
+        new_demand_timeseries_df = demand_timeseries_df.ix[keep_range[0]: keep_range[1]]
+
+        if test_plot == True:
+            new_demand_timeseries_df.plot()
+            plt.show()
+
+        self.demand_array = new_demand_timeseries_df['demand_array']
+        self.start_datetime = keep_range[0]
+
     def series_resample(self, new_time_unit, new_time_interval):
 
         demand_timeseries_df = self.create_datetime_series()
@@ -302,6 +315,7 @@ class PowerTimeSeries():
     def plot_demand_series(self):
         demand_series_df = self.create_datetime_series()
         demand_series_df.plot()
+        plt.show()
 
     def peak_demand(self):
         peak_demand = np.nanmax(self.demand_array)
@@ -310,6 +324,12 @@ class PowerTimeSeries():
     def base_demand(self):
         base_demand = np.nanmin(self.demand_array)
         return base_demand
+
+    def rescale_demand(self, scale_factor=1, negative=False):
+        if negative:
+            self.demand_array = self.demand_array * (-scale_factor)
+        else:
+            self.demand_array = self.demand_array * scale_factor
 
     def total_energy_demand(self, energy_units):
 
@@ -424,4 +444,32 @@ class PowerTimeSeries():
             as_proportion=as_proportion,
             granularity=granularity
         )
+        return load_duration_curve
+
+    def create_load_duration_curve_test(self, as_percent=True, as_proportion=True, granularity=100):
+
+        peak_demand = self.peak_demand()
+        base_demand = self.base_demand()
+        duration_above_demand_level_plot = []
+
+        # hist = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        histogram = np.histogram(self.demand_array, bins=granularity)
+        buckets = list(histogram[0])
+        demand_levels_plot = list(histogram[1])
+
+        for i, bucket in enumerate(reversed(buckets)):
+            count = np.sum(buckets[i:])
+            duration_above_demand_level_plot.append(count)
+        duration_above_demand_level_plot.append(0)
+
+        curve_data = [duration_above_demand_level_plot, demand_levels_plot]
+
+        load_duration_curve = LoadDurationCurve(
+            curve_data=curve_data,
+            as_percent=as_percent,
+            peak_demand=peak_demand,
+            as_proportion=as_proportion,
+            granularity=granularity
+        )
+
         return load_duration_curve

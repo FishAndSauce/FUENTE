@@ -71,7 +71,7 @@ wind_profile = PowerTimeSeries(
 residual_demand = demand_profile.superpose(other_demand_series=[solar_profile, wind_profile], test_plot=False, time_unit='hours', time_interval=1)
 
 start = time.clock()
-load_duration_curve = residual_demand.create_load_duration_curve(as_percent=False, as_proportion=True, granularity=100000)
+load_duration_curve = residual_demand.create_load_duration_curve_test(as_percent=False, as_proportion=True, granularity=1000)
 print 'create_load_duration_curve ', time.clock() - start
 
 start = time.clock()

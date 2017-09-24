@@ -7,13 +7,9 @@ import time
 
 # link to preprepared data
 working_data_store = pd.HDFStore('working_data_store.h5')
-
 hourly_demand_dataframe = working_data_store['hourly_demand_dataframe']
 wind_and_solar_dataframe = working_data_store['wind_and_solar_dataframe']
-
 generators_included_characteristics_dataframe = working_data_store['generators_included_characteristics_dataframe']
-hourly_demand_dataframe = working_data_store['hourly_demand_dataframe']
-
 working_data_store.close()
 
 generators_included_list = [x.encode('utf-8') for x in generators_included_characteristics_dataframe.index.tolist()]
@@ -36,8 +32,6 @@ for generator in generators_included_list:
     vom_cost_dict[generator] = generators_included_characteristics_dataframe.loc[generator, 'VOM ($/MWh)']
     fom_cost_dict[generator] = generators_included_characteristics_dataframe.loc[generator, 'FOM ($/MW/yr)']
     annualised_capital_dict[generator] = generators_included_characteristics_dataframe.loc[generator, 'Annualised Capital ($/MW/yr)']
-
-
 print 'generator_cost_curve_dict ', time.clock() - start
 
 start = time.clock()

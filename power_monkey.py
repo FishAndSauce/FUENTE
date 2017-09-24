@@ -5,7 +5,7 @@ from datetime import timedelta
 import matplotlib.pyplot as plt
 
 
-class LoadDurationCurve():
+class LoadDurationCurve:
     '''
     '''
 
@@ -87,7 +87,7 @@ class LoadDurationCurve():
         return required_capacities_dict
 
 
-class PowerTimeSeries():
+class PowerTimeSeries:
     """ An uninterrupted time series of power demand
 
         Attributes:
@@ -325,7 +325,7 @@ class PowerTimeSeries():
         base_demand = np.nanmin(self.demand_array)
         return base_demand
 
-    def rescale_demand(self, scale_factor=1, negative=False):
+    def rescale_power_series(self, scale_factor=1, negative=False):
         if negative:
             self.demand_array = self.demand_array * (-scale_factor)
         else:
@@ -503,3 +503,6 @@ class PowerTimeSeries():
         )
 
         return load_duration_curve
+
+
+# class battery:

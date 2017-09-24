@@ -85,12 +85,6 @@ class StraightLine(object):
         plot_dict = {'x': x_plot, 'y': y_plot}
         return plot_dict
 
-    def quick_plot(self, *args, **kwargs):
-
-        plot_dict = self.plt_plot_prep(x_range=self.x_range)
-        plt.plot(plot_dict['x'], plot_dict['y'], *args, **kwargs)
-        plt.show()
-
     def area_under_line(self, limits=None):
 
         m = self.gradient
@@ -106,6 +100,15 @@ class StraightLine(object):
         # from calculation of definite integral of straight line
         area = m * ((x1**2) - (x0**2)) / 2 + b * (x1 - x0)
         return area
+
+    def plt_quick_plot(self, x_range=None, *args, **kwargs):
+
+        if x_range:
+            x_range = x_range
+        else:
+            x_range = self.x_range
+        plot_dict = self.plt_plot_prep(x_range=x_range)
+        return plt.plot(plot_dict['x'], plot_dict['y'], *args, **kwargs)
 
 
 def points_to_line(points, keep_range=True):
@@ -123,6 +126,8 @@ def points_to_line(points, keep_range=True):
 
     if keep_range:
         x_range = [x0, x1]
+    else:
+        x_range = None
 
     line = StraightLine(gradient=m, y_intercept=b, x_range=x_range)
     return line

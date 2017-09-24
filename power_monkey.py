@@ -124,6 +124,7 @@ class PowerTimeSeries:
         self.time_interval = time_interval
         self.start_datetime = start_datetime
         self.start_date_and_time = start_date_and_time
+        self.time_step = {'step': self.time_interval, 'units': self.time_unit}
 
         if self.power_unit not in ['W', 'kW', 'MW', 'GW', 'TW']:
             raise ValueError('energy_units must be set as either "W","kW","MW","GW" or "TW"')
@@ -298,7 +299,8 @@ class PowerTimeSeries:
             demand_array=superposed_series_df['demand_array'],
             power_unit=self.power_unit,
             time_unit=time_unit,
-            time_interval=time_interval
+            time_interval=time_interval,
+            start_datetime=self_start
         )
 
         return superposed_series
@@ -312,7 +314,7 @@ class PowerTimeSeries:
 
         return superposed_series
 
-    def plot_demand_series(self):
+    def plot_power_series(self):
         demand_series_df = self.create_datetime_series()
         demand_series_df.plot()
         plt.show()
@@ -327,7 +329,7 @@ class PowerTimeSeries:
 
     def rescale_power_series(self, scale_factor=1, negative=False):
         if negative:
-            self.demand_array = self.demand_array * (-scale_factor)
+            self.demand_array = self.demand_array * scale_factor * (-1)
         else:
             self.demand_array = self.demand_array * scale_factor
 
@@ -505,4 +507,69 @@ class PowerTimeSeries:
         return load_duration_curve
 
 
-# class battery:
+class Battery:
+    '''
+
+    '''
+
+    def __init__(self, capacity, max_dod=1, round_trip_eff=1, soc=1, battery_type=None):
+
+        self.power_rating = power_rating  # as list in form [rating, units], e.g [5.5, 'kW']
+        self.capacity = capacity  # as list in form [capacity, units], e.g. [13, 'kWh']
+        self.max_dod = max_dod  # as proportion, e.g. 0.25
+        self.dod = dod  # as proportion, e.g. o.45
+        self.round_trip_eff = round_trip_eff  # as proportion, e.g. .95
+        self.soc = soc  # as proportion e.g. 0.8
+        self.battery_type = battery_type  # string field for keeping track of technology types
+
+    # def exchange_energy(energy_requested, exchange_type):
+
+        # if exchange_type == 'charge':
+        #     # do something
+        # elif exchange_type == 'discharge':
+        # do something else
+
+        # self.soc = new_soc
+        # return energy_exchanged
+
+    # def change_units():
+
+    # def respond_to_demand(control_paradigm, demand):
+
+    #     if
+
+    #     if control_paradigm = 'simple':
+    #         self.exchange_energy(energy_requested=demand, exchange_type=exchange_type)
+
+
+class DispatchableGenerator:
+    '''
+
+    '''
+
+    def __init__(self, capacity, units, technology, capacity_factor=1):
+        self.capacity = capacity
+        self.units = units
+        self.technology = technology
+        self.total_energy_delivered = 0
+
+    def supply_power(self, requested_power, time_step):
+
+        time_step_dict = {
+            'microseconds': (1.0 / 3600000000),
+            'milliseconds': (1.0 / 3600000),
+            'seconds': (1.0 / 3600),
+            'minutes': (1.0 / 60),
+            'hours': 1,
+            'days': 24,
+            'weeks': 168
+        }
+
+        delivery_time_hours = time_step['step'] * time_step_dict[time_step['units']]
+
+        if requested_power >= self.capacity:
+            power_delivered = self.capacity
+        elif requested_power <= self.capacity:
+            power_delivered = requested_power
+        self.total_energy_delivered += delivery_time_hours * power_delivered
+        return power_delivered

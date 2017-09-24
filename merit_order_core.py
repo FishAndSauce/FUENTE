@@ -49,18 +49,20 @@ demand_profile = PowerTimeSeries(
 print 'PowerTimeSeries ', time.clock() - start
 
 solar_profile = PowerTimeSeries(
-    demand_array=wind_and_solar_dataframe['solar_output_at_1MW_capacity'] * 2000,
+    demand_array=wind_and_solar_dataframe['solar_output_at_1MW_capacity'],
     power_unit="MW",
     time_unit="hours",
     time_interval=1
 )
+solar_profile.rescale_power_series(scale_factor=10000)
 
 wind_profile = PowerTimeSeries(
-    demand_array=wind_and_solar_dataframe['wind_output_at_1MW_capacity'] * 1000,
+    demand_array=wind_and_solar_dataframe['wind_output_at_1MW_capacity'],
     power_unit="MW",
     time_unit="hours",
     time_interval=1
 )
+wind_profile.rescale_power_series(scale_factor=10000)
 
 residual_demand = demand_profile.superpose(other_demand_series=[solar_profile, wind_profile], test_plot=False, time_unit='hours', time_interval=1)
 
@@ -94,3 +96,6 @@ total_cost_dict = calculate_cost_of_electricity(generation_per_year_dict, genera
 print 'total_cost_dict ', total_cost_dict
 lcoe_dict = calculate_lcoe(total_cost_dict, generation_per_year_dict)
 print 'lcoe_dict ', lcoe_dict
+
+print 'generation_per_year_dict: ', generation_per_year_dict
+print 'total_energy_demand: ', residual_demand.total_energy_demand(energy_units='MWh')

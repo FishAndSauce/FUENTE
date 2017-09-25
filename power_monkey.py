@@ -3,36 +3,34 @@ import pandas as pd
 import datetime
 from datetime import timedelta
 import matplotlib.pyplot as plt
+import time
 
 
 class LoadDurationCurve:
     '''
     '''
 
-    def __init__(self, curve_data, as_percent, peak_demand, as_proportion, granularity):
+    def __init__(self, curve_data, as_percent, peak_demand, as_proportion, granularity, interval_areas=None):
+
         self.curve_data = curve_data
         self.as_percent = as_percent
         self.peak_demand = peak_demand
         self.as_proportion = as_proportion
         self.granularity = granularity
+        self.interval_areas = interval_areas
 
     def locate_y_at_x(self, x_value, return_index=False):
         '''
         '''
         index = 0
         for this_value, that_value in zip(self.curve_data[0][:-1], self.curve_data[0][1:]):
-            if x_value < this_value and x_value >= that_value:
+            if (x_value < this_value and x_value >= that_value) or (x_value == this_value and x_value == that_value):
                 if return_index:
                     return {'y': self.curve_data[1][index], 'index': index}
                     break
                 else:
                     return self.curve_data[1][index]
                     break
-            elif x_value == this_value and x_value == that_value:
-                if return_index:
-                    return {'y': 0, 'index': 0}
-                else:
-                    return 0
             index += 1
 
     def calculate_ldc_section_area(self, x_values):
@@ -42,23 +40,19 @@ class LoadDurationCurve:
         start_position_slice = start_position['index']
         finish_position = self.locate_y_at_x(x_values[0], return_index=True)
         finish_position_slice = finish_position['index']
-        curve_interval_x_list = zip(
-            self.curve_data[0][start_position_slice:(finish_position_slice - 1)],
-            self.curve_data[0][(start_position_slice + 1): finish_position_slice])
-        y_delta = self.curve_data[1][1] - self.curve_data[1][0]
+
         cumulative_area = 0
-        count = 0
-        for interval_start_x, interval_finish_x in curve_interval_x_list:
-            # calculate interval area
-            interval_area = y_delta * (interval_start_x + interval_finish_x) / 2
-            cumulative_area += interval_area
-            count += 1
+
+        start = time.clock()
+        area = sum(self.interval_areas[start_position_slice:finish_position_slice])
+        print 'area calc ', time.clock() - start
+
         if self.as_percent:
             cumulative_area = cumulative_area * self.peak_demand
         if self.as_proportion:
             cumulative_area = cumulative_area * 8760
 
-        return cumulative_area
+        return area
 
     def required_capacities(self, generator_rank_list):
         ''' determine required capacities and amount of electricity produced
@@ -403,55 +397,7 @@ class PowerTimeSeries:
         self.demand_array = power_unit_factors_dict[new_power_unit] * demand_in_old_units / power_unit_factors_dict[self.power_unit]
         self.power_unit = new_power_unit
 
-    def create_load_duration_curve(self, as_percent=True, as_proportion=True, granularity=100):
-        '''takes hourly demand data for a period
-        returns a two np.arrays, one is list of demand levels
-        other is list of time duration spent above those demand levels
-        '''
-        peak_demand = self.peak_demand()
-
-        # create bins to sort data points
-        demand_levels = np.arange(0, self.peak_demand(), (peak_demand / granularity))
-
-        # count data points above each bin and create list noting that count
-        # list is the LDC
-
-        duration_above_demand_level_list = list()
-        demand_list = list(self.demand_array)
-        length = len(demand_list)
-        demand_list.sort()
-        count = 0
-        for demand_level in reversed(demand_levels):
-            for i, demand in enumerate(demand_list):
-                if demand >= demand_level:
-                    count = length - i
-
-                    if as_proportion:
-                        proportion_above_demand_level = count / float(length)
-                        duration_above_demand_level_list.append(proportion_above_demand_level)
-                    else:
-                        duration_above_demand_level_list.append(count)
-                    break
-
-        duration_above_demand_level_list.reverse()
-
-        duration_above_demand_level_plot = np.append(duration_above_demand_level_list, 0)
-        demand_levels_plot = np.append(demand_levels, peak_demand)
-        if as_percent:
-            curve_data = [duration_above_demand_level_plot, 100 * demand_levels_plot / peak_demand]
-
-        else:
-            curve_data = [duration_above_demand_level_plot, demand_levels_plot]
-        load_duration_curve = LoadDurationCurve(
-            curve_data=curve_data,
-            as_percent=as_percent,
-            peak_demand=peak_demand,
-            as_proportion=as_proportion,
-            granularity=granularity
-        )
-        return load_duration_curve
-
-    def create_load_duration_curve_test(self, as_percent=True, as_proportion=True, granularity=100):
+    def create_load_duration_curve(self, as_percent=True, as_proportion=True, granularity=100, calculate_area=False):
         '''takes hourly demand data for a period
         returns a two np.arrays, one is list of demand levels
         other is list of time duration spent above those demand levels
@@ -460,10 +406,13 @@ class PowerTimeSeries:
         peak_demand = self.peak_demand()
         base_demand = self.base_demand()
         count_above_demand_level = []
+        trapezium_area_list = []
 
         histogram = np.histogram(self.demand_array, bins=granularity)
         buckets = list(histogram[0])
         demand_levels_list = list(histogram[1])
+        trapezium_base = demand_levels_list[1] - demand_levels_list[0]
+
         # remove upper bin edges
         del demand_levels_list[-1]
         demand_levels_list.insert(0, base_demand)
@@ -477,7 +426,13 @@ class PowerTimeSeries:
 
         last_sum = np.sum(buckets)
         for i, bucket in enumerate(reversed(buckets)):
+            trapezium_height_0 = last_sum
             last_sum -= buckets[i]
+            if calculate_area:
+                trapezium_height_1 = last_sum
+                trapezium_height_ave = (trapezium_height_1 + trapezium_height_0) / 2
+                trapezium_area_list.append(trapezium_height_ave * trapezium_base)
+                print trapezium_height_ave, trapezium_base
 
             if as_proportion:
                 proportion_above_demand_level = last_sum / float(len(self.demand_array))
@@ -494,15 +449,23 @@ class PowerTimeSeries:
 
         curve_data = [time_above_demand_level, demand_levels]
 
-        # print zip(time_above_demand_level, demand_levels)
-
-        load_duration_curve = LoadDurationCurve(
-            curve_data=curve_data,
-            as_percent=as_percent,
-            peak_demand=peak_demand,
-            as_proportion=as_proportion,
-            granularity=granularity
-        )
+        if calculate_area:
+            load_duration_curve = LoadDurationCurve(
+                curve_data=curve_data,
+                as_percent=as_percent,
+                peak_demand=peak_demand,
+                as_proportion=as_proportion,
+                granularity=granularity,
+                interval_areas=trapezium_area_list
+            )
+        else:
+            load_duration_curve = LoadDurationCurve(
+                curve_data=curve_data,
+                as_percent=as_percent,
+                peak_demand=peak_demand,
+                as_proportion=as_proportion,
+                granularity=granularity,
+            )
 
         return load_duration_curve
 

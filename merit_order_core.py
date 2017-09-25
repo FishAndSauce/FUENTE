@@ -67,7 +67,7 @@ wind_profile.rescale_power_series(scale_factor=10000)
 residual_demand = demand_profile.superpose(other_demand_series=[solar_profile, wind_profile], test_plot=False, time_unit='hours', time_interval=1)
 
 start = time.clock()
-load_duration_curve = residual_demand.create_load_duration_curve_test(as_percent=False, as_proportion=True, granularity=1000)
+load_duration_curve = residual_demand.create_load_duration_curve(as_percent=False, as_proportion=True, granularity=1000, calculate_area=True)
 print 'create_load_duration_curve ', time.clock() - start
 
 start = time.clock()
@@ -90,12 +90,6 @@ plot_ldc_areas(
     required_capacities_dict=required_capacities_dict
 )
 
-print generator_fuel_cost_dict
-
-total_cost_dict = calculate_cost_of_electricity(generation_per_year_dict, generator_rank_list, required_capacities_dict, carbon_emissions_cost_dict, vom_cost_dict, fom_cost_dict, annualised_capital_dict, generator_fuel_cost_dict)
-print 'total_cost_dict ', total_cost_dict
-lcoe_dict = calculate_lcoe(total_cost_dict, generation_per_year_dict)
-print 'lcoe_dict ', lcoe_dict
 
 print 'generation_per_year_dict: ', generation_per_year_dict
 print 'total_energy_demand: ', residual_demand.total_energy_demand(energy_units='MWh')

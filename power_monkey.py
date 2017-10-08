@@ -411,9 +411,8 @@ class PowerTimeSeries:
         histogram = np.histogram(self.demand_array, bins=granularity)
         buckets = list(histogram[0])
         demand_levels_list = list(histogram[1])
-        trapezium_base = demand_levels_list[1] - demand_levels_list[0]
 
-        # remove upper bin edges
+        # Adjust endpoints
         del demand_levels_list[-1]
         demand_levels_list.insert(0, base_demand)
         demand_levels_list.insert(0, 0)
@@ -425,14 +424,9 @@ class PowerTimeSeries:
             demand_levels = np.array(demand_levels_list)
 
         last_sum = np.sum(buckets)
+        last_demand_level = 0
         for i, bucket in enumerate(reversed(buckets)):
-            trapezium_height_0 = last_sum
             last_sum -= buckets[i]
-            if calculate_area:
-                trapezium_height_1 = last_sum
-                trapezium_height_ave = (trapezium_height_1 + trapezium_height_0) / 2
-                trapezium_area_list.append(trapezium_height_ave * trapezium_base)
-                print trapezium_height_ave, trapezium_base
 
             if as_proportion:
                 proportion_above_demand_level = last_sum / float(len(self.demand_array))
@@ -441,6 +435,12 @@ class PowerTimeSeries:
             else:
                 count_above_demand_level.append(last_sum)
                 total_time = float(len(self.demand_array))
+
+            if calculate_area:
+                trapezium_height = last_sum
+                trapezium_area_list.append(trapezium_height * (demand_levels[i] - last_demand_level))
+                last_demand_level = demand_levels[i]
+
         # take curve all the way to to x-axis
         count_above_demand_level.insert(0, total_time)
         count_above_demand_level.insert(0, total_time)
@@ -449,23 +449,15 @@ class PowerTimeSeries:
 
         curve_data = [time_above_demand_level, demand_levels]
 
+        load_duration_curve = LoadDurationCurve(
+            curve_data=curve_data,
+            as_percent=as_percent,
+            peak_demand=peak_demand,
+            as_proportion=as_proportion,
+            granularity=granularity,
+        )
         if calculate_area:
-            load_duration_curve = LoadDurationCurve(
-                curve_data=curve_data,
-                as_percent=as_percent,
-                peak_demand=peak_demand,
-                as_proportion=as_proportion,
-                granularity=granularity,
-                interval_areas=trapezium_area_list
-            )
-        else:
-            load_duration_curve = LoadDurationCurve(
-                curve_data=curve_data,
-                as_percent=as_percent,
-                peak_demand=peak_demand,
-                as_proportion=as_proportion,
-                granularity=granularity,
-            )
+            load_duration_curve.interval_areas = trapezium_area_list
 
         return load_duration_curve
 
